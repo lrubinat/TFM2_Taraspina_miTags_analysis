@@ -533,47 +533,7 @@ nrow(otu_tb18_ss1154_rabund_percoccur[otu_tb18_ss1154_rabund_percoccur$mean_rabu
 ```
 
 
-<!---
-```{r iNEXT_test, echo=F}
 
-iNEXT(spider, q=0, datatype="abundance")
-tb18S_inext<-iNEXT(colSums(tb18_tax_occur_ss1154_no_cero), q=0, datatype = "incidence_raw")
-data(spider)
-str(spider)
-
-tb18_tax_occur_ss1154_no_cero_t_binary<-ifelse(t(tb18_tax_occur_ss1154_no_cero)>0, 1, 0)
-test[1:5,1:5]
-tb18S_inext<-iNEXT(t(tb18_tax_occur_ss1154_no_cero_t_binary), q=0, datatype ="incidence_raw")
-
-tb18S_inext<-iNEXT(t(tb18_tax_occur_ss1154_no_cero), q=0, datatype ="incidence_freq")
-
-tb18S_inext<-iNEXT(t(tb18_tax_occur_ss1154_no_cero), q=0, datatype ="abundance")
-dim(tb18_tax_occur_ss1154_no_cero_t_binary)
-```
-
-```{r iNEXT_list, echo=F}
-
-rarecurve_comparison_list<-vector("list")
-rarecurve_comparison_list$no_rarefied<-t(tb18_tax_occur)
-rarecurve_comparison_list$rarefied_ss1154<-tb18_tax_occur_ss1154_no_cero
-
-#parks.spp <- vector("list") 
-#parks.spp$park1 <- park1.spp.abund
-#parks.spp$park2 <- park2.spp.abund
-
-rarecurve(t(as.matrix(tb18_tax_occur_ss1154_no_cero)))
-tb18_tax_occur_ss1154_no_cero.rarecurve<-rarecurve(t(as.matrix(tb18_tax_occur_ss1154_no_cero)))
-head(tb18_tax_occur_ss1154_no_cero.rarecurve)
-
-#rarecurve(t(as.matrix(park1.spp.abund)))
-#park1.rarecurve <- rarecurve(t(as.matrix(park1.spp.abund)))
-#head(park1.rarecurve)
-
-# iNEXT: individual-based abundance data (comparing sites)
-tb18_rarecurve_comparison<-iNEXT(rarecurve_comparison_list, q=0, datatype="abundance")
-ggiNEXT(tb18_rarecurve_comparison)
-```
---->
 
 
 
@@ -595,7 +555,7 @@ ggiNEXT(tb18_rarecurve_comparison)
 
 Let's read the dataset and remove the samples containing less than 36155 reads:
 
-``` {r load_data, echo=FALSE, message=FALSE}
+``` {r load_data_16S, echo=FALSE, message=FALSE}
 
 #read data 
 tb16_tax <- read.table(file="~/Documents/TFM2/TFM2_Taraspina_miTags_analysis/input/otu_table99_SUR_miTags_16S_classif.txt", head=TRUE, fill=TRUE, sep="\t")
@@ -643,35 +603,35 @@ dim(tb16_tax_occur_min36155_no_cero)
 
 Table dimensions and content outline:
 
-```{r starting_dataset, echo=FALSE}
+```{r starting_dataset_16S, echo=FALSE}
 dim(tb16_tax_occur_min36155)
 tb16_tax_occur_min36155[1:5,1:5]
 ```
 
 Minimum number of reads per station:
 
-```{r reads_per_sample_overview1, echo=1}
+```{r reads_per_sample_overview1_16S, echo=1}
 min(colSums(tb16_tax_occur_min36155)) 
 #36155
 ```
 
 Maximum number of reads per station:
 
-```{r reads_per_sample_overview2, echo=1}
+```{r reads_per_sample_overview2_16S, echo=1}
 max(colSums(tb16_tax_occur_min36155)) 
 # max: 935755
 ```
 
 Identification of stations with higher number of reads:
 
-```{r reads_per_sample_overview3, echo=TRUE}
+```{r reads_per_sample_overview3_16S, echo=TRUE}
 amplicons_per_sample<-colSums(tb16_tax_occur_min36155)
 amplicons_per_sample[which(colSums(tb16_tax_occur_min36155)>150000)]
 ```
 
 Overall reads per sample:
 
-``` {r reads_per_sample_overview4, echo=FALSE}
+``` {r reads_per_sample_overview4_16S, echo=FALSE}
 plot(sort(colSums(tb16_tax_occur_min36155)), pch=19, xlab="sample", ylab="reads per sample", cex=0.9)
 ```
 
@@ -680,33 +640,33 @@ plot(sort(colSums(tb16_tax_occur_min36155)), pch=19, xlab="sample", ylab="reads 
 
 Let's normalize the original dataset by randomly subsampling 36155 reads in each station:
 
-``` {r species_richness_rarefaction1, echo=TRUE}
+``` {r species_richness_rarefaction1_16S, echo=TRUE}
 tb16_tax_occur_min36155_t<-t(tb16_tax_occur_min36155)
 tb16_tax_occur_ss36155<-rrarefy(tb16_tax_occur_min36155_t, 36155)
 ```
 
 The normalized table shows the following dimensions and format:
 
-```{r species_richness_rarefaction2, echo=FALSE}
+```{r species_richness_rarefaction2_16S, echo=FALSE}
 dim(tb16_tax_occur_ss36155)
 tb16_tax_occur_ss36155[1:5,1:5]
 ```
 
 Its content fits with the expected normalization values (36155 reads per station):
 
-``` {r species_richness_rarefaction3, echo=TRUE}
+``` {r species_richness_rarefaction3_16S, echo=TRUE}
 rowSums(tb16_tax_occur_ss36155)
 ```
 
 Let's check out how many OTUs don't appear in the new table:
 
-```{r species_richness_rarefaction4, echo=1:5}
+```{r species_richness_rarefaction4_16S, echo=1:5}
 length(which(colSums(tb16_tax_occur_ss36155)==0)) #46
 ```
 
 There are 8045 OTUs that don't show any occurrence in the normalized data. Let's remove them from the table and take a look at its final dimensions:
 
-```{r species_richness_rarefaction5, echo=1:3}
+```{r species_richness_rarefaction5_16S, echo=1:3}
 tb16_tax_occur_ss36155_no_cero<-tb16_tax_occur_ss36155[,-(which(colSums(tb16_tax_occur_ss36155)==0))]
 tb16_tax_occur_ss36155_no_cero<-tb16_tax_occur_ss36155_no_cero[mixedorder(row.names(tb16_tax_occur_ss36155_no_cero)),]
 dim(tb16_tax_occur_ss36155_no_cero) #92 913
@@ -716,7 +676,7 @@ dim(tb16_tax_occur_ss36155_no_cero) #92 913
 ```
 
 Datasets summary:
-```{r dataset_summary}
+```{r dataset_summary_16S}
 dim(tb16_tax) #959 128
 dim(tb16_tax_occur) #959 122
 dim(tb16_tax_occur_ss36155_no_cero) #92 913
