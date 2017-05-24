@@ -41,7 +41,7 @@ library(ggrepel)
 
 Let's read the dataset and remove the samples containing less than 1154 reads:
 
-``` {r load_data, echo=FALSE, message=FALSE}
+``` {r load_data, echo=T, message=FALSE, results="hide", warning=F}
 setwd("~/Documents/TFM2/TFM2_Taraspina_miTags_analysis/")
 
 #read data 
@@ -148,25 +148,29 @@ rowSums(tb18_tax_occur_ss1154)
 Let's check out how many OTUs don't appear in the new table:
 
 ```{r species_richness_rarefaction4, echo=1:5}
-length(which(colSums(tb18_tax_occur_ss1154)==0)) #2923
+length(which(colSums(tb18_tax_occur_ss1154)==0))
 ```
 
-There are 2923 OTUs that don't show any occurrence in the normalized data. Let's remove them from the table and take a look at its final dimensions:
+There are 2942 OTUs that don't show any occurrence in the normalized data. Let's remove them from the table and take a look at its final dimensions:
 
 ```{r species_richness_rarefaction5, echo=1:3}
 tb18_tax_occur_ss1154_no_cero<-tb18_tax_occur_ss1154[,-(which(colSums(tb18_tax_occur_ss1154)==0))]
 tb18_tax_occur_ss1154_no_cero<-tb18_tax_occur_ss1154_no_cero[mixedorder(row.names(tb18_tax_occur_ss1154_no_cero)),]
-dim(tb18_tax_occur_ss1154_no_cero) #43 5719
+dim(tb18_tax_occur_ss1154_no_cero)
 
 #the final dimensions of the normalized table are 43 5719.
 #5719 + 2923 = 8642
 ```
 
 Datasets summary:
-```{r dataset_summary}
-dim(tb18_tax) #8642   57
-dim(tb18_tax_occur) #8642   55
-dim(tb18_tax_occur_ss1154_no_cero) #43 5719
+```{r dataset_summary,  echo=1:3}
+dim(tb18_tax) 
+dim(tb18_tax_occur) 
+dim(tb18_tax_occur_ss1154_no_cero) 
+
+#8642   57
+#8642   55
+#43 5719
 ```
 
 
@@ -1277,38 +1281,38 @@ dim(tb16_tax_occur_ss36155_no_cero) #92 913
 
 ### 2.3.1) Richness and evenness (Shannon index)
 
-```{r shannon_index1, echo=FALSE}
+```{r shannon_index1_16S, echo=FALSE}
 tb16_tax_occur_ss36155_div <- diversity(tb16_tax_occur_ss36155_no_cero, index="shannon")
 ```
 
 Most of the samples take Shannon Index values around 6:
 
-```{r shannon_index2, echo=FALSE}
+```{r shannon_index2_16S, echo=FALSE}
 boxplot(tb16_tax_occur_ss36155_div, pch=19, main="Shannon's index of diversity")
 plot(sort(tb16_tax_occur_ss36155_div), pch=19, main="Shannon's index of diversity")
 ```
 
-### 1.3.2) Richness: OTU number
+### 2.3.2) Richness: OTU number
 
-```{r richness_otu_no1, echo=FALSE}
+```{r richness_otu_no1_16S, echo=FALSE}
 OTUs_per_sample_16S_tax_occur_ss36155<-specnumber(tb16_tax_occur_ss36155_no_cero)
 ```
 
 Lowest number of OTUs per sample:
 
-```{r richness_otu_no2, echo=FALSE}
+```{r richness_otu_no2_16S, echo=FALSE}
 min(OTUs_per_sample_16S_tax_occur_ss36155)
 ```
 
 Maximum number of OTUs per sample:
 
-```{r richness_otu_no3, echo=FALSE}
+```{r richness_otu_no3_16S, echo=FALSE}
 max(OTUs_per_sample_16S_tax_occur_ss36155)
 ```
 
 In most of the samples, we can identify between 600 and 700 OTUs:
 
-```{r richness_otu_no4, echo=TRUE}
+```{r richness_otu_no4_16S, echo=TRUE}
 plot(sort(OTUs_per_sample_16S_tax_occur_ss36155), pch=19)
 boxplot(OTUs_per_sample_16S_tax_occur_ss36155, pch=19)
 ```
@@ -1317,7 +1321,7 @@ boxplot(OTUs_per_sample_16S_tax_occur_ss36155, pch=19)
 
 #### 2.3.3.1) Pielou's index
 
-```{r pielou_index_of_evenness1, echo=TRUE}
+```{r pielou_index_of_evenness1_16S, echo=TRUE}
 pielou_evenness_16S_tax_occur_ss36155<-tb16_tax_occur_ss36155_div/log(OTUs_per_sample_16S_tax_occur_ss36155)
 ```
 
@@ -1325,20 +1329,20 @@ The Pielou index (constrained between 0 and 1) takes values closer to 1 as the v
 
 The less variation in communities between the species (and the presence of a dominant specie), the lower J' is. 
 
-```{r pielou_index_of_evenness2, echo=TRUE}
+```{r pielou_index_of_evenness2_16S, echo=TRUE}
 plot(sort(pielou_evenness_16S_tax_occur_ss36155), pch=19)
 boxplot(pielou_evenness_16S_tax_occur_ss36155, pch=19)
 ```
 
 The OTU_38, with 890 reads, is the most abundant in the overall dataset:
 
-```{r OTUs_overall_abundance, echo=TRUE}
+```{r OTUs_overall_abundance_16S, echo=TRUE}
 head(sort(colSums(tb16_tax_occur_ss36155_no_cero), decreasing=T), n=10L)
 ```
 
 Most of the OTUs show very few occurrences; suggesting that we will probably be able to identify a significant ammount of rare otus:
 
-```{r OTUs_overall_abundance2, echo=TRUE}
+```{r OTUs_overall_abundance2_16S, echo=TRUE}
 plot(log(sort(colSums(tb16_tax_occur_ss36155_no_cero), decreasing=T)), pch=19)
 ```
 
@@ -1348,12 +1352,12 @@ library(sads)
 ?sads
 --->
 
-### 1.3.4) Abundance Models
-#### 1.3.4.1) Rank-Abundance or Dominance/Diversity Model ("radfit")
+### 2.3.4) Abundance Models
+#### 2.3.4.1) Rank-Abundance or Dominance/Diversity Model ("radfit")
 
 The OTUs abundance distribution fits relativelly close to log-normal model. 
 
-```{r radfit, echo=FALSE}
+```{r radfit_16S, echo=FALSE}
 #?radfit
 #otu_tb16_t[1:5,1:5]
 
@@ -1361,11 +1365,11 @@ tb16_tax_occur_min36155_radfit<-radfit(colSums(tb16_tax_occur_min36155_t))
 plot(tb16_tax_occur_min36155_radfit)
 ```
 
-#### 1.3.4.2) Preston's Lognormal Model
+#### 2.3.4.2) Preston's Lognormal Model
 
 According to Preston's lognormal model fit into species frequencies groups, we're missing 1588.816 species:
 
-```{r preston_model1, echo=T}
+```{r preston_model1_16S, echo=T}
 tb16_tax_occur_ss36155_prestonfit<-prestonfit(colSums(tb16_tax_occur_min36155_t))
 plot(tb16_tax_occur_ss36155_prestonfit, main="Pooled species")
 
@@ -1374,7 +1378,7 @@ veiledspec(tb16_tax_occur_ss36155_prestonfit)
 
 When computing Prestons' lognormal model fit without pooling data into groups, we seem to miss 1385.371 species:
 
-```{r preston_model2, echo=4}
+```{r preston_model2_16S, echo=4}
 tb16_tax_occur_ss36155_dist_all<-prestondistr(colSums(tb16_tax_occur_min36155_t))
 plot(tb16_tax_occur_ss36155_prestonfit, main="All malaspina")
 lines(tb16_tax_occur_ss36155_dist_all, line.col="blue3")
@@ -1383,52 +1387,52 @@ veiledspec(tb16_tax_occur_ss36155_dist_all)
 ```
 
 
-### 1.3.5) Rarefaction curves of rarefied and non-rarefied datasets
+### 2.3.5) Rarefaction curves of rarefied and non-rarefied datasets
 
-```{r rarefraction_curve, echo=TRUE}
+```{r rarefraction_curve_16S, echo=TRUE}
 rarec_input<-t(as.matrix(colSums(tb16_tax_occur_ss36155_no_cero)))
 
 #tb16_rarecurve_step1000_10000<-rarecurve(rarec_input, step = 1000, 10000, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="16S amplicons diversity step=1000 & ss=10000\n(40,816 OTUs; 5,247,375 reads)\n")
 #tb16_rarecurve_step1000_10000
 
-tb16_rarecurve_step100_5700<-rarecurve(rarec_input, step = 100, 5700, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="16S amplicons diversity step=100 & ss=5700\n(5,719 OTUs; 49,622 reads)\n")
+tb16_rarecurve_step100_5700<-rarecurve(rarec_input, step = 1000, 19700, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="16S amplicons diversity step=100 & ss=5700\n(19,756 OTUs; 1,554,665 reads)\n")
 
 
 #without rarefying
 rarec_allOTUs_input<-t(as.matrix(colSums(t(tb16_tax_occur))))
-tb16_rarecurve_allOTUs_step100_8642<-rarecurve(rarec_allOTUs_input, step = 100, 8642, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="16S amplicons diversity non-rarefied step=1000 & ss=100000\n(8,642 OTUs; 244,164 reads)\n")
+tb16_rarecurve_allOTUs_step100_8642<-rarecurve(rarec_allOTUs_input, step = 1000, 28200, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="16S amplicons diversity non-rarefied step=1000 & ss=100000\n(28,294 OTUs; 4,285,523 reads)\n")
 ```
 
 
-### 1.3.6) Beta diversity
+### 2.3.6) Beta diversity
 
-#### 1.3.6.1) Dissimilarity matrix using Bray-Curtis index:
+#### 2.3.6.1) Dissimilarity matrix using Bray-Curtis index:
 
 The Bray-Curtis dissimilarity, constrained between 0 (minimum distance) and 1 (highest dissimilarity) allows us to quantify the differences between samples according to the composition and relative abundance of their OTUs. In our dataset, most of the samples pairs take dissimilarity values around 0.8, meaning that their composition is substantially different.
 
-```{r beta_div1, echo=FALSE}
+```{r beta_div1_16S, echo=FALSE}
 #?vegdist
 tb16_tax_occur_ss36155_no_cero.bray<-vegdist(tb16_tax_occur_ss36155_no_cero, method="bray")
 boxplot(tb16_tax_occur_ss36155_no_cero.bray, main="Bray-Curtis dissimilarity matrix")
 ```
 
-#### 1.3.6.2) Hierarchical clustering
+#### 2.3.6.2) Hierarchical clustering
 
 The stations seem to form clusters according to geographic localization, but there are no evident clusters separated from the general groups, apart from the one containing TARA_84, TARA_82 and TARA_85.
 
 (To be done: assign Longhurst provinces information to each station and check if any of the central clusters is meaningful regarding to the samples' geographical location)
 
-```{r beta_div2, echo=FALSE}
+```{r beta_div2_16S, echo=FALSE}
 #UPGMA
 tb16_tax_occur_ss36155_no_cero.upgma<-hclust(tb16_tax_occur_ss36155_no_cero.bray, "average")
 plot(tb16_tax_occur_ss36155_no_cero.upgma, cex=.35, main="Samples Hierarchical Clustering")
 ```
 
-#### 1.3.6.3) Non-metric multidimensional scaling
+#### 2.3.6.3) Non-metric multidimensional scaling
 
 We can identify a prominent group in the central part of the NMDS plot and a few outliers (TARA 82, 84 and 85) in the central-right edge of the plot. The stress parameter takes a value below 0.2, suggesting that the plot is acceptable. 
 
-```{r monoNMDS, echo=F}
+```{r monoNMDS_16S, echo=F}
 #NMDS
 tb16_tax_occur_ss36155_no_cero.nmds<-monoMDS(tb16_tax_occur_ss36155_no_cero.bray)
 tb16_tax_occur_ss36155_no_cero.nmds
@@ -1437,14 +1441,14 @@ plot(tb16_tax_occur_ss36155_no_cero.nmds, main="monoMDs method")
 
 When implementing a most robut function for computing NMDS plots, the result is quiet the same:
 
-```{r metaNMDS, echo=F}
+```{r metaNMDS_16S, echo=F}
 tb16_tax_occur_ss36155_no_cero.meta_nmds<-metaMDS(tb16_tax_occur_ss36155_no_cero.bray)
 plot(tb16_tax_occur_ss36155_no_cero.meta_nmds, main="metaMDS method")
 ```
 
-## 1.4) Geographical analysis
+## 2.4) Geographical analysis
 
-```{r load_geo_data, echo=F, results="hide", message=F}
+```{r load_geo_data_16S, echo=F, results="hide", message=F}
 #load geographical ubication of stations and sort according to otu_tb16 stations sequence.
 MP_geo_16S<-read.table(file="~/Documents/TFM2/TFM2_Taraspina_miTags_analysis/input/Taraspina_SUR_loc_nodot_stand.name2.txt", sep="\t", header=T)
 
@@ -1479,14 +1483,14 @@ Working datasets:
 
 1) Community matrix: tb16_tax_occur_ss36155_no_cero
 
-```{r working_datasets1, echo=T}
+```{r working_datasets1_16S, echo=T}
 dim(tb16_tax_occur_ss36155_no_cero)
 tb16_tax_occur_ss36155_no_cero[1:5, 1:5]
 ```
 
 2) Community Bray-Curtis: tb16_tax_occur_ss36155_no_cero.bray
 
-```{r working_datasets2, echo=2}
+```{r working_datasets2_16S, echo=2}
 tb16_tax_occur_ss36155_no_cero.bray<-vegdist(tb16_tax_occur_ss36155_no_cero, method="bray")
 tb16_tax_occur_ss36155_no_cero.bray<-as.matrix(tb16_tax_occur_ss36155_no_cero.bray)
 dim(tb16_tax_occur_ss36155_no_cero.bray)
@@ -1494,39 +1498,39 @@ dim(tb16_tax_occur_ss36155_no_cero.bray)
 
 3) Stations distances in km: geo_distances_MP_16S
 
-```{r working_datasets3, echo=T}
+```{r working_datasets3_16S, echo=T}
 dim(geo_distances_MP_16S)
 ```
 
 Communities quickly change their composition across geographical distances:
 
-```{r working_datasets4, echo=T}
+```{r working_datasets4_16S, echo=T}
 plot(geo_distances_MP_16S, tb16_tax_occur_ss36155_no_cero.bray, pch=19, cex=0.4, xlab="Geopgraphical distances", ylab="Bray-Curtis dissimilarities")
 ```
 
-### 1.4.1) Mantel correlograms
+### 2.4.1) Mantel correlograms
 
 Mantel statistic is -significantlly- so low, meaning that the correlation between samples dissimilarity and geographical distances is weak.
 
-```{r mantel_correlogram1, echo=T}
+```{r mantel_correlogram1_16S, echo=T}
 mantel(geo_distances_MP_16S, tb16_tax_occur_ss36155_no_cero.bray)
 ```
 
 Maximum distance between samples:
 
-```{r mantel_correlogram2, echo=F}
+```{r mantel_correlogram2_16S, echo=F}
 max(geo_distances_MP_16S)
 ```
 
 Minimum distance between samples:
 
-```{r mantel_correlogram3, echo=F}
+```{r mantel_correlogram3_16S, echo=F}
 min(geo_distances_MP_16S)
 ```
 
 Correlograms:
 
-```{r mantel_correlogram4, echo=T}
+```{r mantel_correlogram4_16S, echo=T}
 MP_16s_ss36155_mantel_correl_by_1000km<-mantel.correlog(tb16_tax_occur_ss36155_no_cero.bray, D.geo=geo_distances_MP_16S, break.pts=seq(0,20000, by=1000))
 plot(MP_16s_ss36155_mantel_correl_by_1000km)
 
@@ -1534,9 +1538,9 @@ MP_16s_ss36155_mantel_correl_by_100km<-mantel.correlog(tb16_tax_occur_ss36155_no
 plot(MP_16s_ss36155_mantel_correl_by_100km)
 ```
 
-## 1.5) Abundance vs. occurence
+## 2.5) Abundance vs. occurence
 
-```{r OTUs_mean_relative_abund, echo=F, results="hide"}
+```{r OTUs_mean_relative_abund_16S, echo=F, results="hide"}
 tb16_tax_occur_ss36155_no_cero[1:5,1:5]
 tb16_tax_occur_ss36155_no_cero_t<-t(tb16_tax_occur_ss36155_no_cero)
 
@@ -1555,7 +1559,7 @@ tb16_tax_occur_ss36155_no_cero_t.rabund_means<-as.data.frame(tb16_tax_occur_ss36
 head(tb16_tax_occur_ss36155_no_cero_t.rabund_means)
 ```
 
-```{r OTUs_occurence, echo=F, results='hide'}
+```{r OTUs_occurence_16S, echo=F, results='hide'}
 tb16_tax_occur_ss36155_no_cero_t.rabund.occur<-tb16_tax_occur_ss36155_no_cero_t.rabund
 tb16_tax_occur_ss36155_no_cero_t.rabund.occur[tb16_tax_occur_ss36155_no_cero_t.rabund.occur>0]<-1
 tb16_tax_occur_ss36155_no_cero_t.rabund.occur[1:5,1:5] # presence - absence table
@@ -1566,7 +1570,7 @@ tb16_tax_occur_ss36155_no_cero_t.rabund_means.occurence_perc<-as.data.frame(100*
 str(tb16_tax_occur_ss36155_no_cero_t.rabund_means.occurence_perc)
 ```
 
-```{r merge_rabund_peroccur, echo=F, results='hide'}
+```{r merge_rabund_peroccur_16S, echo=F, results='hide'}
 otu_tb16_ss36155_rabund_percoccur<-merge(tb16_tax_occur_ss36155_no_cero_t.rabund_means,tb16_tax_occur_ss36155_no_cero_t.rabund_means.occurence_perc, by="row.names")
 
 colnames(otu_tb16_ss36155_rabund_percoccur)<-c("OTUs","mean_rabund","perc_occur")
@@ -1579,7 +1583,7 @@ otu_tb16_ss36155_rabund_percoccur[1:5,]
 
 In the following plot, we can appreciate the OTUs distribution according to their percentage of occurence and relative abundance. The red line keeps up OTUs that occur in more than 80% of the samples, the green line limits regionally rare OTUs (< 0.001%), and the blue one restricts regionally abundant OTUs (> 0.1%).
 
-```{r abund_vs_occurence_table, echo=F}
+```{r abund_vs_occurence_table_16S, echo=F}
 plot(otu_tb16_ss36155_rabund_percoccur$mean_rabund,otu_tb16_ss36155_rabund_percoccur$perc_occur, log="x", pch=19, cex=0.8, xlab="Mean relative abundance", ylab="Percentage of occurence")
 abline(h=80, col="red") #occurence higher than 80%
 abline(v=0.00001, col="green") #rare OTUs
@@ -1592,7 +1596,7 @@ abline(v=0.001, col="blue") #cosmopolitan OTUs
 
 Regionally abundant OTUs (relative abundance over 0.1%):
 
-```{r abundant_OTUs, echo=7}
+```{r abundant_OTUs_16S, echo=7}
 #regionally abundant
 tb16_ss36155_abundant<-otu_tb16_ss36155_rabund_percoccur[otu_tb16_ss36155_rabund_percoccur$mean_rabund > 0.001,]
 
@@ -1604,13 +1608,13 @@ dim(tb16_ss36155_abundant_sorted)
 
 Proportion of regionally abundant OTUs (%):
 
-```{r abundant_OTUs2, echo=F}
+```{r abundant_OTUs2_16S, echo=F}
 (nrow(tb16_ss36155_abundant_sorted)/nrow(otu_tb16_ss36155_rabund_percoccur))*100
 ```
 
 Cosmopolitan OTUs (relative abundance over 0.1% and occurence in more than 80% of samples):
 
-```{r select_cosmopolitan, echo=6}
+```{r select_cosmopolitan_16S, echo=6}
 otu_tb16_ss36155_rabund_cosm<-otu_tb16_ss36155_rabund_percoccur[otu_tb16_ss36155_rabund_percoccur$mean_rabund > 0.001,]
 otu_tb16_ss36155_rabund_poccur_cosm<-otu_tb16_ss36155_rabund_cosm[otu_tb16_ss36155_rabund_cosm$perc_occur > 80,]
 otu_tb16_ss36155_cosmop_sorted<-otu_tb16_ss36155_rabund_poccur_cosm[order(otu_tb16_ss36155_rabund_poccur_cosm$perc_occur, otu_tb16_ss36155_rabund_poccur_cosm$mean_rabund, decreasing = T), c(1,2)]
@@ -1621,7 +1625,7 @@ dim(otu_tb16_ss36155_cosmop_sorted)
 
 Number and proportion (%) of cosmopolitan OTUs:
 
-```{r percentage_cosmopolitan, echo=F}
+```{r percentage_cosmopolitan_16S, echo=F}
 nrow(otu_tb16_ss36155_cosmop_sorted)
 
 (nrow(otu_tb16_ss36155_cosmop_sorted)/nrow(otu_tb16_ss36155_rabund_percoccur))*100
@@ -1629,7 +1633,7 @@ nrow(otu_tb16_ss36155_cosmop_sorted)
 
 Number and proportion (%) of rare OTUs:
 
-```{r rare_OTUs, echo=1}
+```{r rare_OTUs_16S, echo=1}
 nrow(otu_tb16_ss36155_rabund_percoccur[otu_tb16_ss36155_rabund_percoccur$mean_rabund < 0.00001 & otu_tb16_ss36155_rabund_percoccur$mean_rabund >0,])
 
 (nrow(otu_tb16_ss36155_rabund_percoccur[otu_tb16_ss36155_rabund_percoccur$mean_rabund < 0.00001 & otu_tb16_ss36155_rabund_percoccur$mean_rabund >0,])/nrow(otu_tb16_ss36155_rabund_percoccur))*100
