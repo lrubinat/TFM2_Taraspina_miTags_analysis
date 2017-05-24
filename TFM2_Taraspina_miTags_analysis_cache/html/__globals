@@ -59,3 +59,25 @@ species_richness_rarefaction3_16S	rowSums	tb16_tax_occur_ss36155
 species_richness_rarefaction4_16S	==	colSums	length	tb16_tax_occur_ss36155	which
 species_richness_rarefaction5_16S	==	colSums	dim	mixedorder	row.names	tb16_tax_occur_ss36155	which
 dataset_summary_16S	dim	tb16_tax	tb16_tax_occur	tb16_tax_occur_ss36155_no_cero
+merge_tables	$	$<-	F	[<-	as.character	as.numeric	dim	merge	order	rownames	rownames<-	sapply	strsplit	t	tb18_class	tb18_tax_occur_ss1154_no_cero	write.table
+select_phototrophs2	!=	$	&	dim	tb18_ss1154_tax_sorted	which
+select_phototrophs	!=	$	dim	tb18_ss1154_tax_sorted	which
+count_samples_per_group	$	==	>	colSums	dim	length	tb18_phototrophs	which
+aggregate	$	aggregate	attach	c	colnames<-	detach	length	list	order	row.names<-	rowSums	sum	tb18_phototrophs	x
+create_table_merging_#OTUs_#reads_#samples	$	$<-	T	[<-	c	class_summary_otus_per_class_order	class_summary_reads_per_class_order	colnames<-	merge	order	row.names<-
+stations_vs_OTUs_v1	
+stations_vs_OTUs	OTUs_per_class	aes	c	coord_trans	geom_point	geom_text_repel	ggplot	labs	rownames	samples_per_class	scale_x_continuous	tb18S_OTUs_reads_samples	unit
+OTUs_vs_reads	OTUs_per_class	aes	c	element_text	geom_point	geom_text	geom_text_repel	ggplot	labs	reads_per_class	rownames	scale_x_log10	scale_y_continuous	scale_y_log10	tb18S_OTUs_reads_samples	theme	unit
+OTUs_vs_reads_relative_values_18S	$	$<-	colSums	tb18S_OTUs_reads_samples
+OTUs_vs_reads_18S_v2	OTUs_per_class	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	scale_x_log10	scale_y_log10	tb18S_OTUs_reads_samples	tb18S_OTUs_reads_samples_rel_abund	theme	unit
+reads_vs_samples_18S	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	samples_per_class	scale_x_continuous	scale_y_log10	tb18S_OTUs_reads_samples	tb18S_OTUs_reads_samples_rel_abund	theme	unit
+stations_vs_OTUs_18S	OTUs_per_class	aes	c	coord_trans	element_text	geom_point	geom_text_repel	ggplot	labs	rownames	samples_per_class	scale_x_continuous	tb18S_OTUs_reads_samples	tb18S_OTUs_reads_samples_rel_abund	theme	unit
+OTUs_vs_reads_18S	OTUs_per_class	aes	c	coord_trans	element_text	geom_point	geom_text	geom_text_repel	ggplot	labs	reads_per_class	rownames	scale_x_log10	tb18S_OTUs_reads_samples	tb18S_OTUs_reads_samples_rel_abund	theme	unit
+merge_tables_non.norm_18S	$	$<-	[<-	as.character	as.numeric	dim	merge	order	rownames	rownames<-	sapply	strsplit	tb18_class	tb18_tax_occur_min1154
+select_phototrophs_non.norm_18S	!=	$	&	dim	tb18_min1154_tax_sorted	which
+count_samples_per_group_non.norm_18S	$	==	>	colSums	dim	length	tb18_phototrophs_non.norm	which
+aggregate_non.norm_18S	$	aggregate	attach	c	colnames<-	detach	length	list	order	row.names<-	rowSums	sum	tb18_phototrophs_non.norm	x
+create_table_merging_#OTUs_#reads_#samples_non.norm_18S	$	$<-	T	[<-	c	class_summary_otus_per_class_non.norm_order	class_summary_reads_per_class_non.norm_order	colnames<-	merge	order	row.names<-
+OTUs_vs_reads_relative_values_non.norm_18S	$	$<-	colSums	tb18S_OTUs_reads_samples_non.norm
+stations_vs_OTUs_non.norm_18S	OTUs_per_class	aes	c	coord_trans	geom_point	geom_text	ggplot	labs	rownames	samples_per_class	scale_x_continuous	tb18S_OTUs_reads_samples_rel_abund_non.norm
+OTUs_vs_reads_non.norm_18S	OTUs_per_class	aes	c	coord_trans	geom_point	geom_text	ggplot	labs	reads_per_class	rownames	scale_x_log10	tb18S_OTUs_reads_samples_rel_abund_non.norm
