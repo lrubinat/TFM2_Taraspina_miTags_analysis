@@ -1,5 +1,5 @@
 libraries	
-load_data	amplicons_per_sample_tb18	tb18_class	tb18_tax	tb18_tax_occur	tb18_tax_occur_min1154	tb18_tax_occur_min1154_no_cero
+load_data	tb18_class	tb18_tax	tb18_tax_occur
 starting_dataset	
 reads_per_sample_overview1	
 reads_per_sample_overview2	
@@ -20,7 +20,7 @@ richness_otu_no4
 pielou_index_of_evenness1	pielou_evenness_18S_tax_occur_ss1154
 pielou_index_of_evenness2	
 OTUs_overall_abundance	
-OTUs_overall_abundance2	
+OTUs_overall_abundance2	p1	tb18_tax_occur_ss1154_no_cero_rank
 radfit	tb18_tax_occur_min1154_radfit
 preston_model1	tb18_tax_occur_ss1154_prestonfit
 preston_model2	tb18_tax_occur_ss1154_dist_all
@@ -152,3 +152,5 @@ merge_protists_and_bacteria_tb_non.norm	tb16S_protists_plus_bacteria_OTUs_reads_
 OTUs_vs_reads_protists_plus_bacteria_relative_values_non.norm	tb16S_protists_plus_bacteria_OTUs_reads_samples_non.norm_rel_abund
 OTUs_vs_reads_16S_non.norm	
 reads_vs_samples_16S_non.norm	
+summary	amplicons_per_sample_tb18
+samples_selection	tb18_tax_occur_min1154

@@ -1,5 +1,5 @@
 libraries	library
-load_data	<	==	>=	TARA_67_SUR_0d2_3	TARA_70_SUR_0d2_3	[<-	c	colSums	dim	is.na	read.table	row.names<-	rowSums	setwd	subset	summary	which
+load_data	[<-	dim	is.na	read.table	row.names<-	setwd
 starting_dataset	dim	tb18_tax_occur_min1154
 reads_per_sample_overview1	colSums	min	tb18_tax_occur_min1154
 reads_per_sample_overview2	colSums	max	tb18_tax_occur_min1154
@@ -10,7 +10,7 @@ species_richness_rarefaction2	dim	tb18_tax_occur_ss1154
 species_richness_rarefaction3	rowSums	tb18_tax_occur_ss1154
 species_richness_rarefaction4	==	colSums	length	tb18_tax_occur_ss1154	which
 species_richness_rarefaction5	==	colSums	dim	mixedorder	row.names	tb18_tax_occur_ss1154	which
-dataset_summary	dim	tb18_tax	tb18_tax_occur	tb18_tax_occur_ss1154_no_cero
+dataset_summary	dim	tb18_tax	tb18_tax_occur	tb18_tax_occur_min1154	tb18_tax_occur_ss1154_no_cero
 shannon_index1	diversity	tb18_tax_occur_ss1154_no_cero
 shannon_index2	boxplot	plot	sort	tb18_tax_occur_ss1154_div
 richness_otu_no1	specnumber	tb18_tax_occur_ss1154_no_cero
@@ -20,7 +20,7 @@ richness_otu_no4	OTUs_per_sample_18S_tax_occur_ss1154	boxplot	plot	sort
 pielou_index_of_evenness1	OTUs_per_sample_18S_tax_occur_ss1154	log	tb18_tax_occur_ss1154_div
 pielou_index_of_evenness2	boxplot	pielou_evenness_18S_tax_occur_ss1154	plot	sort
 OTUs_overall_abundance	T	colSums	head	sort	tb18_tax_occur_ss1154_no_cero
-OTUs_overall_abundance2	T	colSums	log	plot	sort	tb18_tax_occur_ss1154_no_cero
+OTUs_overall_abundance2	:=	T	V1	aes	as.data.table	geom_point	ggplot	labs	nrow	order	rank	rowSums	scale_y_log10	t	tb18_tax_occur_ss1154_no_cero	theme_bw
 radfit	colSums	plot	radfit	tb18_tax_occur_min1154_t
 preston_model1	colSums	plot	prestonfit	tb18_tax_occur_min1154_t	veiledspec
 preston_model2	colSums	lines	plot	prestondistr	tb18_tax_occur_min1154_t	tb18_tax_occur_ss1154_prestonfit	veiledspec
@@ -73,7 +73,7 @@ OTUs_vs_reads_18S_v2	OTUs_per_class	aes	c	element_text	geom_point	geom_text_repe
 reads_vs_samples_18S	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	samples_per_class	scale_x_continuous	scale_y_log10	tb18S_OTUs_reads_samples	tb18S_OTUs_reads_samples_rel_abund	theme	unit
 stations_vs_OTUs_18S	OTUs_per_class	aes	c	coord_trans	element_text	geom_point	geom_text_repel	ggplot	labs	rownames	samples_per_class	scale_x_continuous	tb18S_OTUs_reads_samples	tb18S_OTUs_reads_samples_rel_abund	theme	unit
 OTUs_vs_reads_18S	OTUs_per_class	aes	c	coord_trans	element_text	geom_point	geom_text	geom_text_repel	ggplot	labs	reads_per_class	rownames	scale_x_log10	tb18S_OTUs_reads_samples	tb18S_OTUs_reads_samples_rel_abund	theme	unit
-merge_tables_non.norm_18S	$	$<-	[<-	as.character	as.numeric	dim	merge	order	rownames	rownames<-	sapply	strsplit	tb18_class	tb18_tax_occur_min1154_no_cero
+merge_tables_non.norm_18S	$	$<-	[<-	as.character	as.numeric	dim	merge	order	rownames	rownames<-	sapply	strsplit	tb18_class	tb18_tax_occur_min1154
 select_phototrophs_non.norm_18S	!=	$	&	dim	tb18_min1154_tax_sorted	which
 count_samples_per_group_non.norm_18S	$	==	>	colSums	dim	length	tb18_phototrophs_non.norm	which
 aggregate_non.norm_18S	$	aggregate	attach	c	colnames<-	detach	length	list	order	row.names<-	rowSums	sum	tb18_phototrophs_non.norm	x
@@ -152,3 +152,5 @@ merge_protists_and_bacteria_tb_non.norm	rbind	tb16S_bacteria_OTUs_reads_samples_
 OTUs_vs_reads_protists_plus_bacteria_relative_values_non.norm	$	$<-	colSums	tb16S_protists_plus_bacteria_OTUs_reads_samples_non.norm
 OTUs_vs_reads_16S_non.norm	OTUs_per_class	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	scale_x_log10	scale_y_log10	tb16S_protists_plus_bacteria_OTUs_reads_samples_non.norm	tb16S_protists_plus_bacteria_OTUs_reads_samples_non.norm_rel_abund	theme	unit
 reads_vs_samples_16S_non.norm	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	samples_per_class	scale_x_continuous	scale_y_log10	tb16S_protists_plus_bacteria_OTUs_reads_samples_non.norm	tb16S_protists_plus_bacteria_OTUs_reads_samples_non.norm_rel_abund	theme	unit
+summary	colSums	summary	tb18_tax_occur
+samples_selection	<	==	>=	TARA_67_SUR_0d2_3	TARA_70_SUR_0d2_3	amplicons_per_sample_tb18	c	colSums	dim	rowSums	subset	tb18_tax_occur	which

@@ -21,7 +21,7 @@ opts_chunk$set(cache=TRUE, autodep=TRUE)
 ```
 --->
 
-```{r libraries, echo=T, message=F}
+```{r libraries, echo=F, results="hide", warning=F, message=F}
 library(data.table)
 library(dplyr)
 library(DT)
@@ -39,9 +39,10 @@ library(ggrepel)
 
 ## 1.1) Data overview
 
-Let's read the dataset and remove the samples containing less than 1154 reads:
 
-``` {r load_data, echo=T, message=FALSE, results="hide", warning=F}
+``` {r load_data, echo=FALSE, message=FALSE, results="hide", warning=F}
+#Let's read the dataset and remove the samples containing less than 1154 reads:
+
 setwd("~/Documents/TFM2/TFM2_Taraspina_miTags_analysis/")
 
 #read data 
@@ -67,9 +68,17 @@ tb18_class[1:5,1:2]
 tb18_tax_occur <- tb18_tax[,1:55]
 dim(tb18_tax_occur) #8642   55
 tb18_tax_occur[1:5,1:5]
+```
 
+The dataset "Taraspina 18S miTags" contains reads from **45 samples of Tara Oceans** and from **10 samples of Malaspina**. On average, each sample contains 4440 OTUs:
+
+```{r summary, echo=FALSE, message=FALSE, warning=F}
 amplicons_per_sample_tb18<-colSums(tb18_tax_occur)
-summary(amplicons_per_sample_tb18) #median of amplicons per sample = ~3086)
+summary(amplicons_per_sample_tb18) 
+#median of amplicons per sample = ~3086)
+```
+
+```{r samples_selection, echo=FALSE, message=FALSE, results="hide", warning=F}
 #we'll remove all samples with less than 1154 reads.
 amplicons_per_sample_tb18[which(colSums(tb18_tax_occur)<1154)]
 
@@ -84,93 +93,96 @@ tb18_tax_occur_min1154<-subset(tb18_tax_occur_min1154, select=-c(TARA_70_SUR_0d2
 dim(tb18_tax_occur_min1154) #8642   43
 
 #let's check if we loose any OTU when excluding the mentioned stations.
-tb18_tax_occur_min1154_no_cero<-tb18_tax_occur_min1154[-(which(rowSums(tb18_tax_occur_min1154)==0)),]
-dim(tb18_tax_occur_min1154_no_cero)
-```
-
-Table dimensions and content outline:
-
-```{r starting_dataset, echo=FALSE}
+tb18_tax_occur_min1154<-tb18_tax_occur_min1154[-(which(rowSums(tb18_tax_occur_min1154)==0)),]
 dim(tb18_tax_occur_min1154)
-tb18_tax_occur_min1154[1:5,1:5]
 ```
 
-Minimum number of reads per station:
+```{r starting_dataset, echo=FALSE, results="hide"}
+#Table dimensions and content outline:
 
-```{r reads_per_sample_overview1, echo=1}
+dim(tb18_tax_occur_min1154)
+#tb18_tax_occur_min1154[1:5,1:5]
+```
+
+```{r reads_per_sample_overview1, echo=F, results="hide"}
+#Minimum number of reads per station:
+
 min(colSums(tb18_tax_occur_min1154)) 
 #1154
 ```
 
-Maximum number of reads per station:
+```{r reads_per_sample_overview2, echo=F, results="hide"}
+#Maximum number of reads per station:
 
-```{r reads_per_sample_overview2, echo=1}
-max(colSums(tb18_tax_occur_min1154)) 
+max(colSums(tb18_tax_occur_min1154))
 # max: 23781
 ```
 
-Identification of stations with higher number of reads:
+```{r reads_per_sample_overview3, echo=F, results="hide"}
+#Identification of stations with higher number of reads:
 
-```{r reads_per_sample_overview3, echo=TRUE}
 amplicons_per_sample<-colSums(tb18_tax_occur_min1154)
 amplicons_per_sample[which(colSums(tb18_tax_occur_min1154)>20000)]
 ```
-
+\
 Overall reads per sample:
 
 ``` {r reads_per_sample_overview4, echo=FALSE}
-plot(sort(colSums(tb18_tax_occur_min1154)), pch=19, xlab="sample", ylab="reads per sample", cex=0.9)
+
+plot(sort(colSums(tb18_tax_occur_min1154)), pch=19, xlab="sample no.", ylab="reads per sample", cex=0.9)
 ```
 
 
 ## 1.2) Normalization
 
-Let's normalize the original dataset by randomly subsampling 1154 reads in each station:
+\
+In order to keep as many samples as possible, we rarefy at **1154 reads per sample**. By that, we loose 10 samples, and after removing the exluded samples in the 16S dataset (to make them comparable), we end up with a **normalized dataset containing 43 samples and 5669 OTUs**.
 
-``` {r species_richness_rarefaction1, echo=TRUE}
+
+``` {r species_richness_rarefaction1, echo=FALSE, results="hide"}
+#Let's normalize the original dataset by randomly subsampling 1154 reads in each station:
+
 tb18_tax_occur_min1154_t<-t(tb18_tax_occur_min1154)
 tb18_tax_occur_ss1154<-rrarefy(tb18_tax_occur_min1154_t, 1154)
 ```
 
-The normalized table shows the following dimensions and format:
-
-```{r species_richness_rarefaction2, echo=FALSE}
+```{r species_richness_rarefaction2, echo=FALSE, results="hide"}
 dim(tb18_tax_occur_ss1154)
-tb18_tax_occur_ss1154[1:5,1:5]
+#tb18_tax_occur_ss1154[1:5,1:5]
 ```
 
-Its content fits with the expected normalization values (1154 reads per station):
+``` {r species_richness_rarefaction3, echo=F, results="hide"}
+#Its content fits with the expected normalization values (1154 reads per station):
 
-``` {r species_richness_rarefaction3, echo=TRUE}
 rowSums(tb18_tax_occur_ss1154)
 ```
 
-Let's check out how many OTUs don't appear in the new table:
+```{r species_richness_rarefaction4, echo=F, results="hide"}
+#OTUs we loose in the new table:
 
-```{r species_richness_rarefaction4, echo=1:5}
 length(which(colSums(tb18_tax_occur_ss1154)==0))
 ```
 
-There are 2942 OTUs that don't show any occurrence in the normalized data. Let's remove them from the table and take a look at its final dimensions:
+```{r species_richness_rarefaction5, echo=F, results="hide"}
+#let's remove them from the table and take a look at its final dimensions:
 
-```{r species_richness_rarefaction5, echo=1:3}
 tb18_tax_occur_ss1154_no_cero<-tb18_tax_occur_ss1154[,-(which(colSums(tb18_tax_occur_ss1154)==0))]
 tb18_tax_occur_ss1154_no_cero<-tb18_tax_occur_ss1154_no_cero[mixedorder(row.names(tb18_tax_occur_ss1154_no_cero)),]
 dim(tb18_tax_occur_ss1154_no_cero)
 
-#the final dimensions of the normalized table are 43 5719.
-#5719 + 2923 = 8642
+#the final dimensions of the normalized table are 43 5669.
+#5669 + 2973 = 8642
 ```
-
+\
 Datasets summary:
-```{r dataset_summary,  echo=1:3}
-dim(tb18_tax) 
-dim(tb18_tax_occur) 
-dim(tb18_tax_occur_ss1154_no_cero) 
+```{r dataset_summary,  echo=T}
+dim(tb18_tax) #original dataset
 
-#8642   57
-#8642   55
-#43 5719
+dim(tb18_tax_occur) #original dataset with occurrence data alone
+
+dim(tb18_tax_occur_min1154) #dataset without samples with less than 1154 OTUs
+
+dim(tb18_tax_occur_ss1154_no_cero) #rarefied dataset
 ```
 
 
@@ -186,8 +198,8 @@ tb18_tax_occur_ss1154_div <- diversity(tb18_tax_occur_ss1154_no_cero, index="sha
 Most of the samples take Shannon Index values around 6:
 
 ```{r shannon_index2, echo=FALSE}
-boxplot(tb18_tax_occur_ss1154_div, pch=19, main="Shannon's index of diversity")
-plot(sort(tb18_tax_occur_ss1154_div), pch=19, main="Shannon's index of diversity")
+boxplot(tb18_tax_occur_ss1154_div, pch=19, main="TP 18S Shannon's index of diversity",ylab="Shannon's index")
+plot(sort(tb18_tax_occur_ss1154_div), pch=19, main="TP 18S Shannon's index of diversity", xlab="sample no.", ylab="Shannon's index")
 ```
 
 ### 1.3.2) Richness: OTU number
@@ -210,38 +222,51 @@ max(OTUs_per_sample_18S_tax_occur_ss1154)
 
 In most of the samples, we can identify between 600 and 700 OTUs:
 
-```{r richness_otu_no4, echo=TRUE}
-plot(sort(OTUs_per_sample_18S_tax_occur_ss1154), pch=19)
-boxplot(OTUs_per_sample_18S_tax_occur_ss1154, pch=19)
+```{r richness_otu_no4, echo=F}
+plot(sort(OTUs_per_sample_18S_tax_occur_ss1154), pch=19, main="TP 18S no. of OTUs per sample", xlab="sample no.", ylab="no. of OTUs")
+boxplot(OTUs_per_sample_18S_tax_occur_ss1154, pch=19, main="TP 18S no. of OTUs per sample", ylab="no. of OTUs")
 ```
 
 ### 1.3.3) Index of evenness
 
 #### 1.3.3.1) Pielou's index
 
-```{r pielou_index_of_evenness1, echo=TRUE}
+```{r pielou_index_of_evenness1, echo=F, results="hide"}
 pielou_evenness_18S_tax_occur_ss1154<-tb18_tax_occur_ss1154_div/log(OTUs_per_sample_18S_tax_occur_ss1154)
 ```
 
-The Pielou index (constrained between 0 and 1) takes values closer to 1 as the variation of species proportion in a sample increases. Most of the samples get values around 0.95, meaning that the numerical composition of different OTUs in a sample is highly variable - there's no constant presence of dominant species.
+The Pielou index (constrained between 0 and 1) takes values closer to 1 as the variation of species proportion in a sample increases. Most of the samples get values between 0.90 and 0.95, meaning that the numerical composition of different OTUs in a sample is highly variable - there's no constant presence of dominant species.
 
-The less variation in communities between the species (and the presence of a dominant specie), the lower J' is. 
-
-```{r pielou_index_of_evenness2, echo=TRUE}
-plot(sort(pielou_evenness_18S_tax_occur_ss1154), pch=19)
-boxplot(pielou_evenness_18S_tax_occur_ss1154, pch=19)
+```{r pielou_index_of_evenness2, echo=F}
+plot(sort(pielou_evenness_18S_tax_occur_ss1154), pch=19, main="TP 18S Pielou's index", xlab="sample no.", ylab="Pielou's index")
+boxplot(pielou_evenness_18S_tax_occur_ss1154, pch=19,  main="TP 18S Pielou's index", ylab="Pielou's index")
 ```
 
-The OTU_38, with 874 reads, is the most abundant in the overall dataset:
 
-```{r OTUs_overall_abundance, echo=TRUE}
+```{r OTUs_overall_abundance, echo=F, results="hide"}
+#The OTU_38, with 874 reads, is the most abundant in the overall dataset:
+
 head(sort(colSums(tb18_tax_occur_ss1154_no_cero), decreasing=T), n=10L)
 ```
 
 Most of the OTUs show very few occurrences; suggesting that we will probably be able to identify a significant ammount of rare otus:
 
-```{r OTUs_overall_abundance2, echo=TRUE}
-plot(log(sort(colSums(tb18_tax_occur_ss1154_no_cero), decreasing=T)), pch=19)
+```{r OTUs_overall_abundance2, echo=F, results="hide"}
+#previous version:
+#plot(log(sort(colSums(tb18_tax_occur_ss1154_no_cero), decreasing=T)), pch=19)
+
+tb18_tax_occur_ss1154_no_cero_rank<-as.data.table(t(tb18_tax_occur_ss1154_no_cero))
+tb18_tax_occur_ss1154_no_cero_rank[,V1:=rowSums(tb18_tax_occur_ss1154_no_cero_rank)]
+tb18_tax_occur_ss1154_no_cero_rank<-tb18_tax_occur_ss1154_no_cero_rank[order(V1,decreasing = T)]
+tb18_tax_occur_ss1154_no_cero_rank[,rank:=1:nrow(tb18_tax_occur_ss1154_no_cero_rank)]
+
+p1<-ggplot(tb18_tax_occur_ss1154_no_cero_rank, aes(x=rank,y=V1))+
+  geom_point(aes(x=rank,y=V1))+
+  scale_y_log10(name="abundance (log scale)")+
+  labs(title="TP 18S rank abundance curve")+
+  theme_bw()+
+  labs(colour = "") 
+p1
 ```
 
 <!---
@@ -265,16 +290,17 @@ plot(tb18_tax_occur_min1154_radfit)
 
 #### 1.3.4.2) Preston's Lognormal Model
 
-According to Preston's lognormal model fit into species frequencies groups, we're missing 1588.816 species:
+According to Preston's lognormal model fitted into groups of species' frequencies, we're missing 1588.816 species:
 
-```{r preston_model1, echo=T}
+```{r preston_model1, echo=F}
 tb18_tax_occur_ss1154_prestonfit<-prestonfit(colSums(tb18_tax_occur_min1154_t))
 plot(tb18_tax_occur_ss1154_prestonfit, main="Pooled species")
 
 veiledspec(tb18_tax_occur_ss1154_prestonfit)
 ```
 
-When computing Prestons' lognormal model fit without pooling data into groups, we seem to miss 1385.371 species:
+\
+When computing Prestons' lognormal model fit without pooling data into groups, we miss 1385.371 species:
 
 ```{r preston_model2, echo=4}
 tb18_tax_occur_ss1154_dist_all<-prestondistr(colSums(tb18_tax_occur_min1154_t))
@@ -897,7 +923,7 @@ ggplot(tb18S_OTUs_reads_samples_rel_abund) +
 Let's add the taxonomic classification by merging "tb18_tax_occur_min1154_t" with "tb18_tax":
 
 ```{r merge_tables_non.norm_18S, echo=FALSE, results="hide", warning=F}
-tb18_tax_occur_min1154_t<-tb18_tax_occur_min1154_no_cero
+tb18_tax_occur_min1154_t<-tb18_tax_occur_min1154
 tb18_min1154_tax<-merge(tb18_tax_occur_min1154_t,tb18_class, by="row.names")
 
 dim(tb18_min1154_tax)
