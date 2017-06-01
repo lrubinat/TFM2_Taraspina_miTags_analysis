@@ -31,6 +31,7 @@ library(vegan)
 library(iNEXT)
 library(fossil)
 library(ggrepel)
+library(dendextend)
 ```
 
 
@@ -243,6 +244,15 @@ boxplot(pielou_evenness_18S_tax_occur_ss1154, pch=19,  main="TP 18S Pielou's ind
 ```
 
 
+<!---
+#### 1.3.3.2) Sads
+library(sads)
+?sads
+--->
+
+### 1.3.4) Abundance Models
+
+
 ```{r OTUs_overall_abundance, echo=F, results="hide"}
 #The OTU_38, with 874 reads, is the most abundant in the overall dataset:
 
@@ -269,13 +279,8 @@ p1<-ggplot(tb18_tax_occur_ss1154_no_cero_rank, aes(x=rank,y=V1))+
 p1
 ```
 
-<!---
-#### 1.3.3.2) Sads
-library(sads)
-?sads
---->
 
-### 1.3.4) Abundance Models
+
 #### 1.3.4.1) Rank-Abundance or Dominance/Diversity Model ("radfit")
 
 The OTUs abundance distribution fits relativelly close to log-normal model. 
@@ -288,13 +293,13 @@ tb18_tax_occur_min1154_radfit<-radfit(colSums(tb18_tax_occur_min1154_t))
 plot(tb18_tax_occur_min1154_radfit)
 ```
 
-#### 1.3.4.2) Preston's Lognormal Model
+#### 1.3.4.2) Preston's Log-normal Model
 
 According to Preston's lognormal model fitted into groups of species' frequencies, we're missing 1588.816 species:
 
 ```{r preston_model1, echo=F}
 tb18_tax_occur_ss1154_prestonfit<-prestonfit(colSums(tb18_tax_occur_min1154_t))
-plot(tb18_tax_occur_ss1154_prestonfit, main="Pooled species")
+plot(tb18_tax_occur_ss1154_prestonfit, main="TP 18S fit to Preston log-normal model \n(pooled species)")
 
 veiledspec(tb18_tax_occur_ss1154_prestonfit)
 ```
@@ -304,7 +309,7 @@ When computing Prestons' lognormal model fit without pooling data into groups, w
 
 ```{r preston_model2, echo=4}
 tb18_tax_occur_ss1154_dist_all<-prestondistr(colSums(tb18_tax_occur_min1154_t))
-plot(tb18_tax_occur_ss1154_prestonfit, main="All malaspina")
+plot(tb18_tax_occur_ss1154_prestonfit, main="TP 18S fit to Preston log-normal model \n(red: pooled; blue: non-pooled)")
 lines(tb18_tax_occur_ss1154_dist_all, line.col="blue3")
 
 veiledspec(tb18_tax_occur_ss1154_dist_all)
@@ -313,18 +318,18 @@ veiledspec(tb18_tax_occur_ss1154_dist_all)
 
 ### 1.3.5) Rarefaction curves of rarefied and non-rarefied datasets
 
-```{r rarefraction_curve, echo=TRUE}
+```{r rarefraction_curve, echo=FALSE}
 rarec_input<-t(as.matrix(colSums(tb18_tax_occur_ss1154_no_cero)))
 
 #tb18_rarecurve_step1000_10000<-rarecurve(rarec_input, step = 1000, 10000, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="18S amplicons diversity step=1000 & ss=10000\n(40,816 OTUs; 5,247,375 reads)\n")
 #tb18_rarecurve_step1000_10000
 
-tb18_rarecurve_step100_5700<-rarecurve(rarec_input, step = 100, 5700, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="18S amplicons diversity step=100 & ss=5700\n(5,719 OTUs; 49,622 reads)\n")
+tb18_rarecurve_step1000_ss1154<-rarecurve(rarec_input, step = 100, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="18S amplicons diversity, step=100 \n(5,719 OTUs; 49,622 reads)\n")
 
 
 #without rarefying
 rarec_allOTUs_input<-t(as.matrix(colSums(t(tb18_tax_occur))))
-tb18_rarecurve_allOTUs_step100_8642<-rarecurve(rarec_allOTUs_input, step = 100, 8642, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="18S amplicons diversity non-rarefied step=100 & ss=8642\n(8,642 OTUs; 244,184 reads)\n")
+tb18_rarecurve_allOTUs_step1000_ss8642<-rarecurve(rarec_allOTUs_input, step = 100, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="18S amplicons diversity non-rarefied, step=100 \n(8,642 OTUs; 244,184 reads)\n")
 ```
 
 
@@ -332,7 +337,7 @@ tb18_rarecurve_allOTUs_step100_8642<-rarecurve(rarec_allOTUs_input, step = 100, 
 
 #### 1.3.6.1) Dissimilarity matrix using Bray-Curtis index:
 
-The Bray-Curtis dissimilarity, constrained between 0 (minimum distance) and 1 (highest dissimilarity) allows us to quantify the differences between samples according to the composition and relative abundance of their OTUs. In our dataset, most of the samples pairs take dissimilarity values around 0.8, meaning that their composition is substantially different.
+The Bray-Curtis dissimilarity, constrained between 0 (minimum distance) and 1 (highest dissimilarity) allows us to quantify the differences between samples according to the composition and the relative abundance of their OTUs. In our dataset, most of the samples pairs take dissimilarity values around 0.8, meaning that their composition is substantially different.
 
 ```{r beta_div1, echo=FALSE}
 #?vegdist
@@ -350,6 +355,18 @@ The stations seem to form clusters according to geographic localization, but the
 #UPGMA
 tb18_tax_occur_ss1154_no_cero.upgma<-hclust(tb18_tax_occur_ss1154_no_cero.bray, "average")
 plot(tb18_tax_occur_ss1154_no_cero.upgma, cex=.35, main="Samples Hierarchical Clustering")
+
+dend <- as.dendrogram(tb18_tax_occur_ss1154_no_cero.upgma)
+
+longhurst<-read.table("input/TP_longhurst_provinces_merged.txt",header=F,sep="\t")
+row.names(longhurst)<-longhurst$V1
+tb18_tax_occur_ss1154_no_cero_dend<-merge(tb18_tax_occur_ss1154_no_cero, longhurst, by="row.names", all.x=TRUE)
+row.names(tb18_tax_occur_ss1154_no_cero_dend)<-tb18_tax_occur_ss1154_no_cero_dend$V3
+tb18_tax_occur_ss1154_no_cero_dend<-tb18_tax_occur_ss1154_no_cero_dend[,-c("V1","V2","V3","Row.names")]
+tb18_tax_occur_ss1154_no_cero.bray<-vegdist(tb18_tax_occur_ss1154_no_cero, method="bray")
+boxplot(tb18_tax_occur_ss1154_no_cero.bray, main="Bray-Curtis dissimilarity matrix")
+
+
 ```
 
 #### 1.3.6.3) Non-metric multidimensional scaling
