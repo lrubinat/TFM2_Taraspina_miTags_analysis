@@ -1864,9 +1864,9 @@ ggplot(tb18S_OTUs_reads_samples_rel_abund) +
 
 ## 2.1) Data overview
 
-Let's read the dataset and remove the samples containing less than 36155 reads:
 
 ``` {r load_data_16S, echo=FALSE, message=FALSE, results="hide", warning=F}
+#Let's read the dataset and remove the samples containing less than 36155 reads:
 
 #read data 
 tb16_tax <- read.table(file="~/Documents/TFM2/TFM2_Taraspina_miTags_analysis/input/otu_table99_SUR_miTags_16S_classif.txt", head=TRUE, fill=TRUE, sep="\t")
@@ -1891,9 +1891,16 @@ tb16_class[1:5,1:3]
 tb16_tax_occur <- tb16_tax[,1:55]
 dim(tb16_tax_occur) #28294    55
 tb16_tax_occur[1:5,1:5]
+```
 
+The dataset "Taraspina 16S miTags" contains reads from **45 samples of Tara Oceans** and from **10 samples of Malaspina**. On average, each sample contains 77920 OTUs:
+
+```{r summary_16S, echo=FALSE, message=FALSE, warning=F}
 amplicons_per_sample_tb16<-colSums(tb16_tax_occur)
 summary(amplicons_per_sample_tb16) #median of amplicons per sample = ~83020)
+```
+
+```{r samples_selection, echo=FALSE, message=FALSE, results="hide", warning=F}
 #we'll remove all samples with less than 36155 reads.
 sort(amplicons_per_sample_tb16[which(colSums(tb16_tax_occur)<36155)])
 
@@ -1907,39 +1914,38 @@ tb16_tax_occur_min36155<-subset(tb16_tax_occur_min36155, select=-c(TARA_100_SUR_
 dim(tb16_tax_occur_min36155) #28294    43
 
 #let's check if we loose any OTU when excluding the mentioned stations.
-tb16_tax_occur_min36155_no_cero<-tb16_tax_occur_min36155[-(which(rowSums(tb16_tax_occur_min36155)==0)),]
-dim(tb16_tax_occur_min36155_no_cero)
-```
-
-
-Table dimensions and content outline:
-
-```{r starting_dataset_16S, echo=FALSE}
+tb16_tax_occur_min36155<-tb16_tax_occur_min36155[-(which(rowSums(tb16_tax_occur_min36155)==0)),]
 dim(tb16_tax_occur_min36155)
-tb16_tax_occur_min36155[1:5,1:5]
 ```
 
-Minimum number of reads per station:
+```{r starting_dataset_16S, echo=FALSE, results="hide"}
+#Table dimensions and content outline:
 
-```{r reads_per_sample_overview1_16S, echo=1}
+dim(tb16_tax_occur_min36155)
+#tb16_tax_occur_min36155[1:5,1:5]
+```
+
+```{r reads_per_sample_overview1_16S, echo=FALSE, results="hide"}
+#Minimum number of reads per station:
+
 min(colSums(tb16_tax_occur_min36155)) 
 #36155
 ```
 
-Maximum number of reads per station:
+```{r reads_per_sample_overview2_16S, echo=FALSE, results="hide"}
+#Maximum number of reads per station:
 
-```{r reads_per_sample_overview2_16S, echo=1}
 max(colSums(tb16_tax_occur_min36155)) 
-# max: 935755
+# max: 158933
 ```
 
-Identification of stations with higher number of reads:
+```{r reads_per_sample_overview3_16S, echo=FALSE, results="hide"}
+#Identification of stations with higher number of reads:
 
-```{r reads_per_sample_overview3_16S, echo=TRUE}
 amplicons_per_sample<-colSums(tb16_tax_occur_min36155)
-amplicons_per_sample[which(colSums(tb16_tax_occur_min36155)>150000)]
+amplicons_per_sample[which(colSums(tb16_tax_occur_min36155)>158000)]
 ```
-
+\
 Overall reads per sample:
 
 ``` {r reads_per_sample_overview4_16S, echo=FALSE}
