@@ -1900,7 +1900,7 @@ amplicons_per_sample_tb16<-colSums(tb16_tax_occur)
 summary(amplicons_per_sample_tb16) #median of amplicons per sample = ~83020)
 ```
 
-```{r samples_selection, echo=FALSE, message=FALSE, results="hide", warning=F}
+```{r samples_selection_16S, echo=FALSE, message=FALSE, results="hide", warning=F}
 #we'll remove all samples with less than 36155 reads.
 sort(amplicons_per_sample_tb16[which(colSums(tb16_tax_occur)<36155)])
 
@@ -1955,54 +1955,55 @@ plot(sort(colSums(tb16_tax_occur_min36155)), pch=19, xlab="sample", ylab="reads 
 
 ## 2.2) Normalization
 
-Let's normalize the original dataset by randomly subsampling 36155 reads in each station:
+\
+In order to keep as many samples as possible, we rarefy at **36155 reads per sample**. By that, we loose 10 samples, and after removing the exluded samples in the 18S dataset (to make them comparable), we end up with a **normalized dataset containing 43 samples and 24691 OTUs**.
 
-``` {r species_richness_rarefaction1_16S, echo=TRUE}
+
+``` {r species_richness_rarefaction1_16S, echo=FALSE, results="hide"}
+#Let's normalize the original dataset by randomly subsampling 36155 reads in each station:
+
 tb16_tax_occur_min36155_t<-t(tb16_tax_occur_min36155)
 tb16_tax_occur_ss36155<-rrarefy(tb16_tax_occur_min36155_t, 36155)
 ```
 
-The normalized table shows the following dimensions and format:
-
-```{r species_richness_rarefaction2_16S, echo=FALSE}
+```{r species_richness_rarefaction2_16S, echo=FALSE, results="hide"}
 dim(tb16_tax_occur_ss36155)
 tb16_tax_occur_ss36155[1:5,1:5]
 ```
 
-Its content fits with the expected normalization values (36155 reads per station):
+``` {r species_richness_rarefaction3_16S, echo=F, results="hide"}
+#Its content fits with the expected normalization values (36155 reads per station):
 
-``` {r species_richness_rarefaction3_16S, echo=TRUE}
 rowSums(tb16_tax_occur_ss36155)
 ```
 
-Let's check out how many OTUs don't appear in the new table:
+```{r species_richness_rarefaction4_16S, echo=F, results="hide"}
+#Let's check out how many OTUs don't appear in the new table:
 
-```{r species_richness_rarefaction4_16S, echo=1:5}
 length(which(colSums(tb16_tax_occur_ss36155)==0))
 ```
 
-There are 8045 OTUs that don't show any occurrence in the normalized data. Let's remove them from the table and take a look at its final dimensions:
+```{r species_richness_rarefaction5_16S, echo=F, results="hide"}
+#let's remove them from the table and take a look at its final dimensions:
 
-```{r species_richness_rarefaction5_16S, echo=1:3}
 tb16_tax_occur_ss36155_no_cero<-tb16_tax_occur_ss36155[,-(which(colSums(tb16_tax_occur_ss36155)==0))]
 tb16_tax_occur_ss36155_no_cero<-tb16_tax_occur_ss36155_no_cero[mixedorder(row.names(tb16_tax_occur_ss36155_no_cero)),]
 dim(tb16_tax_occur_ss36155_no_cero)
 
-#43 19726
-
 #the final dimensions of the normalized table are 43 19726.
-#8568 + 19726 = 28294
+#19726 + 4965 = 24691
 ```
 
+\
 Datasets summary:
-```{r dataset_summary_16S, 1:3}
-dim(tb16_tax)
-dim(tb16_tax_occur)
-dim(tb16_tax_occur_ss36155_no_cero)
+```{r dataset_summary_16S, echo=T}
+dim(tb16_tax) #original dataset
 
-#28294    58
-#28294    55
-#43 19726
+dim(tb16_tax_occur) #original dataset with occurrence data alone
+
+dim(tb16_tax_occur_min36155) #dataset without samples with less than 36155 OTUs
+
+dim(tb16_tax_occur_ss36155_no_cero) #rarefied dataset
 ```
 
 
@@ -2051,29 +2052,42 @@ boxplot(OTUs_per_sample_16S_tax_occur_ss36155, pch=19)
 
 #### 2.3.3.1) Pielou's index
 
-```{r pielou_index_of_evenness1_16S, echo=TRUE}
+```{r pielou_index_of_evenness1_16S, echo=F, results="hide"}
 pielou_evenness_16S_tax_occur_ss36155<-tb16_tax_occur_ss36155_div/log(OTUs_per_sample_16S_tax_occur_ss36155)
 ```
 
 The Pielou index (constrained between 0 and 1) takes values closer to 1 as the variation of species proportion in a sample increases. Most of the samples get values around 0.95, meaning that the numerical composition of different OTUs in a sample is highly variable - there's no constant presence of dominant species.
 
-The less variation in communities between the species (and the presence of a dominant specie), the lower J' is. 
 
-```{r pielou_index_of_evenness2_16S, echo=TRUE}
+```{r pielou_index_of_evenness2_16S, echo=F, results="hide"}
 plot(sort(pielou_evenness_16S_tax_occur_ss36155), pch=19)
 boxplot(pielou_evenness_16S_tax_occur_ss36155, pch=19)
 ```
 
 The OTU_38, with 874 reads, is the most abundant in the overall dataset:
 
-```{r OTUs_overall_abundance_16S, echo=TRUE}
+```{r OTUs_overall_abundance_16S, echo=F, results="hide"}
 head(sort(colSums(tb16_tax_occur_ss36155_no_cero), decreasing=T), n=10L)
 ```
 
 Most of the OTUs show very few occurrences; suggesting that we will probably be able to identify a significant ammount of rare otus:
 
 ```{r OTUs_overall_abundance2_16S, echo=TRUE}
-plot(log(sort(colSums(tb16_tax_occur_ss36155_no_cero), decreasing=T)), pch=19)
+#previous version:
+#plot(log(sort(colSums(tb16_tax_occur_ss36155_no_cero), decreasing=T)), pch=19)
+
+tb16_tax_occur_ss36155_no_cero_rank<-as.data.table(t(tb16_tax_occur_ss36155_no_cero))
+tb16_tax_occur_ss36155_no_cero_rank[,V1:=rowSums(tb16_tax_occur_ss36155_no_cero_rank)]
+tb16_tax_occur_ss36155_no_cero_rank<-tb16_tax_occur_ss36155_no_cero_rank[order(V1,decreasing = T)]
+tb16_tax_occur_ss36155_no_cero_rank[,rank:=1:nrow(tb16_tax_occur_ss36155_no_cero_rank)]
+
+p1<-ggplot(tb16_tax_occur_ss36155_no_cero_rank, aes(x=rank,y=V1))+
+  geom_point(aes(x=rank,y=V1))+
+  scale_y_log10(name="abundance (log scale)")+
+  labs(title="TP 16S rank abundance curve")+
+  theme_bw()+
+  labs(colour = "") 
+p1
 ```
 
 <!---
@@ -2794,7 +2808,7 @@ ggplot(tb16S_protists_plus_bacteria_OTUs_reads_samples_rel_abund) +
 Let's add the taxonomic classification by merging "tb16_tax_occur_min36155_t" with "tb16_tax":
 
 ```{r merge_tables_non.norm_16S, echo=FALSE, results="hide", warning=F}
-tb16_tax_occur_min36155_t<-tb16_tax_occur_min36155_no_cero
+tb16_tax_occur_min36155_t<-tb16_tax_occur_min36155
 tb16_min36155_tax<-merge(tb16_tax_occur_min36155_t,tb16_class, by="row.names")
 
 dim(tb16_min36155_tax)

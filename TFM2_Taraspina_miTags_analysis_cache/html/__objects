@@ -47,7 +47,7 @@ abundant_OTUs2
 select_cosmopolitan	otu_tb18_ss1154_cosmop_sorted	otu_tb18_ss1154_cosmop_sorted_prov	otu_tb18_ss1154_rabund_cosm	otu_tb18_ss1154_rabund_poccur_cosm
 percentage_cosmopolitan	
 rare_OTUs	
-load_data_16S	amplicons_per_sample_tb16	tb16_class	tb16_tax	tb16_tax_occur	tb16_tax_occur_min36155	tb16_tax_occur_min36155_no_cero
+load_data_16S	tb16_class	tb16_tax	tb16_tax_occur
 starting_dataset_16S	
 reads_per_sample_overview1_16S	
 reads_per_sample_overview2_16S	
@@ -183,3 +183,5 @@ create_table_merging_#OTUs_#reads_#samples_non.raref	tb18S_OTUs_reads_samples
 OTUs_vs_reads_relative_values_18S_non.raref	tb18S_OTUs_reads_samples_rel_abund
 OTUs_vs_reads_18S_v2_non.raref	
 reads_vs_samples_18S_non.raref	
+summary_16S	amplicons_per_sample_tb16
+samples_selection_16S	tb16_tax_occur_min36155
