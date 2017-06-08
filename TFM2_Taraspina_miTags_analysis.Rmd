@@ -260,7 +260,7 @@ library(sads)
 head(sort(colSums(tb18_tax_occur_ss1154_no_cero), decreasing=T), n=10L)
 ```
 
-Most of the OTUs show very few occurrences; suggesting that we will probably be able to identify a significant ammount of rare otus:
+Most of the OTUs show very few occurrences, suggesting that we will probably be able to identify a significant ammount of rare otus:
 
 ```{r OTUs_overall_abundance2, echo=F, results="hide"}
 #previous version:
@@ -2070,9 +2070,9 @@ The OTU_38, with 874 reads, is the most abundant in the overall dataset:
 head(sort(colSums(tb16_tax_occur_ss36155_no_cero), decreasing=T), n=10L)
 ```
 
-Most of the OTUs show very few occurrences; suggesting that we will probably be able to identify a significant ammount of rare otus:
+Most of the OTUs show very few occurrences, suggesting that we will probably be able to identify a significant ammount of rare otus:
 
-```{r OTUs_overall_abundance2_16S, echo=TRUE}
+```{r OTUs_overall_abundance2_16S, echo=F, results="hide"}
 #previous version:
 #plot(log(sort(colSums(tb16_tax_occur_ss36155_no_cero), decreasing=T)), pch=19)
 
@@ -2102,29 +2102,27 @@ library(sads)
 The OTUs abundance distribution fits relativelly close to log-normal model. 
 
 ```{r radfit_16S, echo=FALSE}
-#?radfit
-#otu_tb16_t[1:5,1:5]
-
 tb16_tax_occur_min36155_radfit<-radfit(colSums(tb16_tax_occur_min36155_t))
 plot(tb16_tax_occur_min36155_radfit)
 ```
 
 #### 2.3.4.2) Preston's Lognormal Model
 
-According to Preston's lognormal model fit into species frequencies groups, we're missing 1588.816 species:
+According to Preston's lognormal model fit into species frequencies groups, we're missing 83761.1 species:
 
-```{r preston_model1_16S, echo=T}
+```{r preston_model1_16S, echo=F}
 tb16_tax_occur_ss36155_prestonfit<-prestonfit(colSums(tb16_tax_occur_min36155_t))
-plot(tb16_tax_occur_ss36155_prestonfit, main="Pooled species")
+plot(tb16_tax_occur_ss36155_prestonfit, main="TP 18S fit to Preston log-normal model \n(pooled species)")
 
 veiledspec(tb16_tax_occur_ss36155_prestonfit)
 ```
 
-When computing Prestons' lognormal model fit without pooling data into groups, we seem to miss 1385.371 species:
+\
+When computing Prestons' lognormal model fit without pooling data into groups, we seem to miss 50576.64 species:
 
 ```{r preston_model2_16S, echo=4}
 tb16_tax_occur_ss36155_dist_all<-prestondistr(colSums(tb16_tax_occur_min36155_t))
-plot(tb16_tax_occur_ss36155_prestonfit, main="All malaspina")
+plot(tb16_tax_occur_ss36155_prestonfit, main="TP 18S fit to Preston log-normal model \n(red: pooled; blue: non-pooled)")
 lines(tb16_tax_occur_ss36155_dist_all, line.col="blue3")
 
 veiledspec(tb16_tax_occur_ss36155_dist_all)
@@ -2133,18 +2131,14 @@ veiledspec(tb16_tax_occur_ss36155_dist_all)
 
 ### 2.3.5) Rarefaction curves of rarefied and non-rarefied datasets
 
-```{r rarefraction_curve_16S, echo=TRUE}
+```{r rarefraction_curve_16S, echo=FALSE}
 rarec_input<-t(as.matrix(colSums(tb16_tax_occur_ss36155_no_cero)))
 
-#tb16_rarecurve_step1000_10000<-rarecurve(rarec_input, step = 1000, 10000, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="16S amplicons diversity step=1000 & ss=10000\n(40,816 OTUs; 5,247,375 reads)\n")
-#tb16_rarecurve_step1000_10000
-
-tb16_rarecurve_step100_5700<-rarecurve(rarec_input, step = 1000, 19700, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="16S amplicons diversity step=100 & ss=5700\n(19,756 OTUs; 1,554,665 reads)\n")
-
+tb16_rarecurve_step100<-rarecurve(rarec_input, step = 1000, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="16S amplicons diversity, step=100\n(19,726 OTUs; 1,554,665 reads)\n")
 
 #without rarefying
 rarec_allOTUs_input<-t(as.matrix(colSums(t(tb16_tax_occur))))
-tb16_rarecurve_allOTUs_step100_8642<-rarecurve(rarec_allOTUs_input, step = 1000, 28200, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="16S amplicons diversity non-rarefied step=1000 & ss=100000\n(28,294 OTUs; 4,285,523 reads)\n")
+tb16_rarecurve_allOTUs_step100_8642<-rarecurve(rarec_allOTUs_input, step = 1000, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="16S amplicons diversity non-rarefied, step=1000\n(28,294 OTUs; 4,285,523 reads)\n")
 ```
 
 
@@ -2172,6 +2166,71 @@ tb16_tax_occur_ss36155_no_cero.upgma<-hclust(tb16_tax_occur_ss36155_no_cero.bray
 plot(tb16_tax_occur_ss36155_no_cero.upgma, cex=.35, main="Samples Hierarchical Clustering")
 ```
 
+
+```{r hclust_coloured, echo=FALSE}
+#we'll repeat the UPGMA with the Longhurst codes added in the stations name
+longhurst<-read.table("input/TP_longhurst_provinces_merged.txt",header=F,sep="\t")
+row.names(longhurst)<-longhurst$V1
+tb16_tax_occur_ss36155_no_cero_dend<-merge(tb16_tax_occur_ss36155_no_cero, longhurst, by="row.names", all.x=TRUE)
+row.names(tb16_tax_occur_ss36155_no_cero_dend)<-tb16_tax_occur_ss36155_no_cero_dend$V3
+tb16_tax_occur_ss36155_no_cero_dend<-tb16_tax_occur_ss36155_no_cero_dend[ , -which(names(tb16_tax_occur_ss36155_no_cero_dend) %in% c("Row.names","V1","V2","V3"))]
+
+tb16_tax_occur_ss36155_no_cero_dend.bray<-vegdist(tb16_tax_occur_ss36155_no_cero_dend, method="bray")
+tb16_tax_occur_ss36155_no_cero_dend.upgma<-hclust(tb16_tax_occur_ss36155_no_cero_dend.bray, "average")
+plot(tb16_tax_occur_ss36155_no_cero_dend.upgma, cex=.35, main="Samples Hierarchical Clustering")
+```
+
+<!--
+```{r hclust_coloured2, echo=F, results="hide"}
+dend <- as.dendrogram(tb16_tax_occur_ss36155_no_cero_dend.upgma)
+
+###########
+
+# Create a vector giving a color for each province
+provinces <- rep("Other", length(rownames(tb16_tax_occur_ss36155_no_cero_dend)))
+is_x <- grepl("SATL", rownames(tb16_tax_occur_ss36155_no_cero_dend))
+provinces[is_x] <- "SATL"
+is_x <- grepl("SPSG", rownames(tb16_tax_occur_ss36155_no_cero_dend))
+provinces[is_x] <- "SPSG"
+is_x <- grepl("PEQD", rownames(tb16_tax_occur_ss36155_no_cero_dend))
+provinces[is_x] <- "PEQD"
+is_x <- grepl("NASE", rownames(tb16_tax_occur_ss36155_no_cero_dend))
+provinces[is_x] <- "NASE"
+is_x <- grepl("SPO", rownames(tb16_tax_occur_ss36155_no_cero_dend))
+provinces[is_x] <- "SPO"
+is_x <- grepl("NPO", rownames(tb16_tax_occur_ss36155_no_cero_dend))
+provinces[is_x] <- "NPO"
+is_x <- grepl("NAO", rownames(tb16_tax_occur_ss36155_no_cero_dend))
+provinces[is_x] <- "NAO"
+is_x <- grepl("IO", rownames(tb16_tax_occur_ss36155_no_cero_dend))
+provinces[is_x] <- "IO"
+is_x <- grepl("SAO", rownames(tb16_tax_occur_ss36155_no_cero_dend))
+provinces[is_x] <- "SAO"
+is_x <- grepl("SO", rownames(tb16_tax_occur_ss36155_no_cero_dend))
+provinces[is_x] <- "SO"
+
+provinces <- factor(provinces)
+n_provincess <- length(unique(provinces))
+cols_4 <- colorspace::rainbow_hcl(n_provincess, c = 70, l  = 50)
+col_provinces <- cols_4[provinces]
+
+k234 <- cutree(dend, k = 2:4)
+
+labels_colors(dend) <- col_provinces[order.dendrogram(dend)]
+dend <- color_branches(dend, k = 4)
+
+par(mar = c(10,4,2,12))
+plot(dend, horiz = TRUE)
+colored_bars(cbind(k234[,3:1], col_provinces), dend, rowLabels = c(paste0("k = ", 4:2), "Provinces"), horiz = TRUE)
+legend(1,-8, legend=c("Indic", "N. Atlantic", "N. Atlantic Subtropical Gyral Province (East)", "N. Pacific Ocean", "Pacific Equatorial Divergence", "S. Atlantic", "S. Atlantic", "Southern Ocean", "S. Pacific", "S. Pacific Subtropical Gyre"), fill = cols_4, cex=0.8, ncol = 3)
+
+#legend(1, 95, legend=c("Line 1", "Line 2"),
+#       col=c("red", "blue"), lty=1:2, cex=0.8)
+dev.off()
+```
+-->
+
+
 #### 2.3.6.3) Non-metric multidimensional scaling
 
 We can identify a prominent group in the central part of the NMDS plot and a few outliers (TARA 82, 84 and 85) in the central-right edge of the plot. The stress parameter takes a value below 0.2, suggesting that the plot is acceptable. 
@@ -2185,7 +2244,7 @@ plot(tb16_tax_occur_ss36155_no_cero.nmds, main="monoMDs method")
 
 When implementing a most robut function for computing NMDS plots, the result is quiet the same:
 
-```{r metaNMDS_16S, echo=F}
+```{r metaNMDS_16S, echo=F, results="hide", warning=F}
 tb16_tax_occur_ss36155_no_cero.meta_nmds<-metaMDS(tb16_tax_occur_ss36155_no_cero.bray)
 plot(tb16_tax_occur_ss36155_no_cero.meta_nmds, main="metaMDS method")
 ```
@@ -2223,32 +2282,25 @@ dim(geo_distances_MP_16S)
 #geo distances dataset ready to use: "geo_distances_MP_16S"
 ```
 
-Working datasets:
+```{r working_datasets1_16S, echo=F, results="hide", warning=F}
+#Working datasets:
 
-1) Community matrix: tb16_tax_occur_ss36155_no_cero
-
-```{r working_datasets1_16S, echo=T}
+#1) Community matrix: tb16_tax_occur_ss36155_no_cero
 dim(tb16_tax_occur_ss36155_no_cero)
 tb16_tax_occur_ss36155_no_cero[1:5, 1:5]
-```
 
-2) Community Bray-Curtis: tb16_tax_occur_ss36155_no_cero.bray
-
-```{r working_datasets2_16S, echo=2}
+#2) Community Bray-Curtis: tb16_tax_occur_ss36155_no_cero.bray
 tb16_tax_occur_ss36155_no_cero.bray<-vegdist(tb16_tax_occur_ss36155_no_cero, method="bray")
 tb16_tax_occur_ss36155_no_cero.bray<-as.matrix(tb16_tax_occur_ss36155_no_cero.bray)
 dim(tb16_tax_occur_ss36155_no_cero.bray)
-```
 
-3) Stations distances in km: geo_distances_MP_16S
-
-```{r working_datasets3_16S, echo=T}
+#3) Stations distances in km: geo_distances_MP_16S
 dim(geo_distances_MP_16S)
 ```
 
 Communities quickly change their composition across geographical distances:
 
-```{r working_datasets4_16S, echo=T}
+```{r working_datasets4_16S, echo=F}
 plot(geo_distances_MP_16S, tb16_tax_occur_ss36155_no_cero.bray, pch=19, cex=0.4, xlab="Geopgraphical distances", ylab="Bray-Curtis dissimilarities")
 ```
 
@@ -2256,19 +2308,15 @@ plot(geo_distances_MP_16S, tb16_tax_occur_ss36155_no_cero.bray, pch=19, cex=0.4,
 
 Mantel statistic is -significantlly- so low, meaning that the correlation between samples dissimilarity and geographical distances is weak.
 
-```{r mantel_correlogram1_16S, echo=T}
+```{r mantel_correlogram1_16S, echo=F}
 mantel(geo_distances_MP_16S, tb16_tax_occur_ss36155_no_cero.bray)
 ```
 
-Maximum distance between samples:
-
-```{r mantel_correlogram2_16S, echo=F}
+```{r mantel_correlogram2_16S, echo=F, results="hide"}
+#Maximum distance between samples:
 max(geo_distances_MP_16S)
-```
 
-Minimum distance between samples:
-
-```{r mantel_correlogram3_16S, echo=F}
+#Minimum distance between samples:
 min(geo_distances_MP_16S)
 ```
 
@@ -2325,7 +2373,12 @@ otu_tb16_ss36155_rabund_percoccur<-otu_tb16_ss36155_rabund_percoccur[,-1]
 otu_tb16_ss36155_rabund_percoccur[1:5,]
 ```
 
-In the following plot, we can appreciate the OTUs distribution according to their percentage of occurence and relative abundance. The red line keeps up OTUs that occur in more than 80% of the samples, the green line limits regionally rare OTUs (< 0.001%), and the blue one restricts regionally abundant OTUs (> 0.1%).
+
+OTUs distribution according to their percentage of occurence and relative abundance.\
+- red line: OTUs that occur in more than 80% of the samples.\
+- blue line: regionally abundant OTUs (> 0.1%).\
+- green line: regionally rare OTUs (< 0.001%).
+
 
 ```{r abund_vs_occurence_table_16S, echo=F}
 plot(otu_tb16_ss36155_rabund_percoccur$mean_rabund,otu_tb16_ss36155_rabund_percoccur$perc_occur, log="x", pch=19, cex=0.8, xlab="Mean relative abundance", ylab="Percentage of occurence")
@@ -2340,49 +2393,50 @@ abline(v=0.001, col="blue") #cosmopolitan OTUs
 
 Regionally abundant OTUs (relative abundance over 0.1%):
 
-```{r abundant_OTUs_16S, echo=7}
+```{r abundant_OTUs_16S, echo=F}
 #regionally abundant
 tb16_ss36155_abundant<-otu_tb16_ss36155_rabund_percoccur[otu_tb16_ss36155_rabund_percoccur$mean_rabund > 0.001,]
 
 tb16_ss36155_abundant_sorted<-tb16_ss36155_abundant[order(tb16_ss36155_abundant$mean_rabund, tb16_ss36155_abundant$perc_occur, decreasing = T), c(1,2)]
 
-tb16_ss1154_abundant_sorted_prov<-cbind(otu_names=row.names(tb16_ss36155_abundant_sorted),tb16_ss36155_abundant_sorted)
+tb16_ss36155_abundant_sorted_prov<-cbind(otu_names=row.names(tb16_ss36155_abundant_sorted),tb16_ss36155_abundant_sorted)
 tb16_class_prov<-cbind(otu_names=row.names(tb16_class),tb16_class)
-tb16_class_prov<-tb16_class_prov[,-2]
-tb16_ss1154_abundant_sorted_prov<-merge(tb16_ss1154_abundant_sorted_prov,tb16_class_prov, by="otu_names", all.x=TRUE)
+#tb16_class_prov<-tb16_class_prov[,-2]
+tb16_ss36155_abundant_sorted_prov<-merge(tb16_ss36155_abundant_sorted_prov,tb16_class_prov, by="otu_names", all.x=TRUE)
 
-tb16_ss1154_abundant_sorted_prov[,c(1,2,3,5)]
-dim(tb16_ss1154_abundant_sorted_prov)
+tb16_ss36155_abundant_sorted_prov<-tb16_ss36155_abundant_sorted_prov[order( tb16_ss36155_abundant_sorted_prov$mean_rabund, tb16_ss36155_abundant_sorted_prov$perc_occur, decreasing = T), c(1,2,3,6,4)]
+#dim(tb16_ss36155_abundant_sorted_prov)
 ```
 
-Proportion of regionally abundant OTUs (%):
+Number and roportion of regionally abundant OTUs (%):
 
 ```{r abundant_OTUs2_16S, echo=F}
-(nrow(tb16_ss36155_abundant_sorted)/nrow(otu_tb16_ss36155_rabund_percoccur))*100
+nrow(tb16_ss36155_abundant_sorted_prov)
+
+(nrow(tb16_ss36155_abundant_sorted_prov)/nrow(otu_tb16_ss36155_rabund_percoccur))*100
 ```
 
 Cosmopolitan OTUs (relative abundance over 0.1% and occurence in more than 80% of samples):
 
-```{r select_cosmopolitan_16S, echo=6}
+```{r select_cosmopolitan_16S, echo=F}
 otu_tb16_ss36155_rabund_cosm<-otu_tb16_ss36155_rabund_percoccur[otu_tb16_ss36155_rabund_percoccur$mean_rabund > 0.001,]
 otu_tb16_ss36155_rabund_poccur_cosm<-otu_tb16_ss36155_rabund_cosm[otu_tb16_ss36155_rabund_cosm$perc_occur > 80,]
 otu_tb16_ss36155_cosmop_sorted<-otu_tb16_ss36155_rabund_poccur_cosm[order(otu_tb16_ss36155_rabund_poccur_cosm$perc_occur, otu_tb16_ss36155_rabund_poccur_cosm$mean_rabund, decreasing = T), c(1,2)]
 
 
-otu_tb16_ss1154_cosmop_sorted_prov<-cbind(otu_names=row.names(otu_tb16_ss36155_cosmop_sorted),otu_tb16_ss36155_cosmop_sorted)
-otu_tb16_ss1154_cosmop_sorted_prov<-merge(otu_tb16_ss1154_cosmop_sorted_prov,tb16_class_prov, by="otu_names", all.x=TRUE)
+otu_tb16_ss36155_cosmop_sorted_prov<-cbind(otu_names=row.names(otu_tb16_ss36155_cosmop_sorted),otu_tb16_ss36155_cosmop_sorted)
+otu_tb16_ss36155_cosmop_sorted_prov<-merge(otu_tb16_ss36155_cosmop_sorted_prov,tb16_class_prov, by="otu_names", all.x=TRUE)
 
-
-otu_tb16_ss1154_cosmop_sorted_prov[,c(1,2,3,5)]
-dim(otu_tb16_ss1154_cosmop_sorted_prov)
+otu_tb16_ss36155_cosmop_sorted_prov<-otu_tb16_ss36155_cosmop_sorted_prov[order(otu_tb16_ss36155_cosmop_sorted_prov$perc_occur, otu_tb16_ss36155_cosmop_sorted_prov$mean_rabund, decreasing = T), c(1,2,3,6,4)]
+#dim(otu_tb16_ss36155_cosmop_sorted_prov)
 ```
 
 Number and proportion (%) of cosmopolitan OTUs:
 
 ```{r percentage_cosmopolitan_16S, echo=F}
-nrow(otu_tb16_ss36155_cosmop_sorted)
+nrow(otu_tb16_ss36155_cosmop_sorted_prov)
 
-(nrow(otu_tb16_ss36155_cosmop_sorted)/nrow(otu_tb16_ss36155_rabund_percoccur))*100
+(nrow(otu_tb16_ss36155_cosmop_sorted_prov)/nrow(otu_tb16_ss36155_rabund_percoccur))*100
 ```
 
 Number and proportion (%) of rare OTUs:
@@ -2400,13 +2454,15 @@ nrow(otu_tb16_ss36155_rabund_percoccur[otu_tb16_ss36155_rabund_percoccur$mean_ra
 
 ### 2.6.1) Normalized data
 
-#### 2.6.1.1) Absolute values
+\
+**PHOTOTROPHS + HETEROTROPHS**
 
-Let's add the taxonomic classification by merging "tb16_tax_occur_ss36155_no_cero" with "tb16_tax":
 
 ```{r merge_tables_16S, echo=FALSE, results="hide", warning=FALSE}
+#Let's add the taxonomic classification by merging "tb16_tax_occur_ss36155_no_cero" with "tb16_tax":
+
 tb16_tax_occur_ss36155_no_cero_t<-t(tb16_tax_occur_ss36155_no_cero)
-tb16_ss36155_tax<-merge(tb16_tax_occur_ss36155_no_cero_t,tb16_class, by="row.names")
+tb16_ss36155_tax<-merge(tb16_tax_occur_ss36155_no_cero_t,tb16_class, by="row.names", all.x=T)
 
 dim(tb16_ss36155_tax)
 tb16_ss36155_tax[1:5,1:5]
