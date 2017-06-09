@@ -3116,8 +3116,16 @@ colnames(cyano_OTUs_reads)<-c("reads_per_class","OTUs_per_class")
 cyano_OTUs_reads[1:3,1:2]
 
 cyano_OTUs_reads<-cyano_OTUs_reads[order(cyano_OTUs_reads$reads_per_class, cyano_OTUs_reads$OTUs_per_class, decreasing = T), c(1,2)]
-cyano_OTUs_reads
+```
 
+\
+Absolute values of cyanobacteria groups richness and abundance:
+
+```{r cyanos_abs_values, echo=F}
+cyano_OTUs_reads
+```
+
+```{r cyanos_rel_values, echo=F, results="hide"}
 #compute relative values
 cyano_OTUs_reads_rel_abund <- cyano_OTUs_reads
 
@@ -3132,7 +3140,13 @@ cyano_OTUs_reads_rel_abund["cyano_group"]<-NA
 cyano_OTUs_reads_rel_abund$cyano_group<-c("Prochlorococcus", "Synechococcus", "Other cyanobacteria")
 
 cyano_OTUs_reads_rel_abund2<-read.table("input/cyano_histograms_data.txt", head=TRUE)
-cyano_OTUs_reads_rel_abund2
+```
+
+
+Relative values of Cyanobacteria groups richness and abundance:
+
+```{r print_rel_values, echo=F}
+cyano_OTUs_reads_rel_abund[,1:2]
 
 ggplot(cyano_OTUs_reads_rel_abund2, aes(x=group, y=value, fill=data)) + 
   geom_bar(position="dodge", stat="identity") +

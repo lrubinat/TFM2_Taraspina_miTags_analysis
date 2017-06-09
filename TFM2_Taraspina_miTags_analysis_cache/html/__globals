@@ -143,7 +143,7 @@ count_samples_per_group_16S_protists	$	==	>	colSums	dim	length	tb16_protists	whi
 count_samples_per_group_16S_bacteria	$	==	>	colSums	length	tb16_bacteria	which
 create_table_merging_#OTUs_#reads_#samples_protists	$	$<-	T	[<-	c	class_summary_otus_per_class_16S_protists_order	class_summary_reads_per_class_16S_protists_order	colnames<-	merge	order	row.names<-
 create_table_merging_#OTUs_#reads_#samples_bacteria	$	$<-	T	[<-	c	class_summary_otus_per_class_16S_bacteria_order	class_summary_reads_per_class_16S_bacteria_order	colnames<-	merge	order	row.names<-
-cyanobacteria_histogram	$	$<-	==	T	[<-	aes	aggregate	attach	c	colSums	colnames<-	data	detach	element_blank	element_text	geom_bar	ggplot	group	labs	length	list	merge	order	read.table	rel	row.names<-	rowSums	rownames<-	scale_fill_manual	scale_y_continuous	sum	tb16_phototrophs	theme	value	which	x
+cyanobacteria_histogram	$	==	T	aggregate	attach	c	colnames<-	detach	length	list	merge	order	row.names<-	rowSums	sum	tb16_phototrophs	which	x
 merge_protists_and_bacteria_tb	rbind	tb16S_bacteria_OTUs_reads_samples	tb16S_protists_OTUs_reads_samples
 OTUs_vs_reads_relative_values_16S	$	$<-	colSums	tb16S_OTUs_reads_samples
 OTUs_vs_reads_16S	OTUs_per_class	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	scale_x_log10	scale_y_log10	tb16S_protists_plus_bacteria_OTUs_reads_samples	tb16S_protists_plus_bacteria_OTUs_reads_samples_rel_abund	theme	unit
@@ -220,3 +220,6 @@ cyanobacteria_histogram_non.raref_16S	$	==	T	aggregate	attach	c	colnames<-	detac
 cyanos_abs_values_non.raref	cyano_OTUs_reads
 cyanos_rel_values_non.raref	$	$<-	[<-	c	colSums	cyano_OTUs_reads	read.table	rownames<-
 print_rel_values_non.raref	aes	c	cyano_OTUs_reads_rel_abund	cyano_OTUs_reads_rel_abund2	data	element_blank	element_text	geom_bar	ggplot	group	labs	rel	scale_fill_manual	scale_y_continuous	theme	value
+cyanos_abs_values	cyano_OTUs_reads
+cyanos_rel_values	$	$<-	[<-	c	colSums	cyano_OTUs_reads	read.table	rownames<-
+print_rel_values	aes	c	cyano_OTUs_reads_rel_abund	cyano_OTUs_reads_rel_abund2	data	element_blank	element_text	geom_bar	ggplot	group	labs	rel	scale_fill_manual	scale_y_continuous	theme	value
