@@ -200,3 +200,23 @@ count_samples_per_group_16S	$	==	>	as.data.frame	colSums	data.table	length	rbind
 aggregate_16S	$	aggregate	attach	c	colnames<-	detach	length	list	order	row.names<-	rowSums	sum	tb16_phototrophs	x
 create_table_merging_#OTUs_#reads_#samples_16S	$	T	c	class_summary_otus_per_class_order	class_summary_reads_per_class_order	colnames<-	merge	occurrence_counts_phototrophs	order	row.names<-
 OTUs_vs_reads_16S_v2	OTUs_per_class	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	scale_x_log10	scale_y_log10	tb16S_OTUs_reads_samples	tb16S_OTUs_reads_samples_rel_abund	theme	unit
+merge_tables_non.raref_16S	$	$<-	[<-	as.character	as.numeric	dim	merge	order	rownames	rownames<-	sapply	strsplit	tb16_class	tb16_tax_occur_min36155
+dim_merge1_non.raref_16S	colSums	nrow	sum	tb16_min36155_tax_sorted
+dim_merge2_non.raref_16S	!=	$	colSums	nrow	sum	tb16_min36155_tax_sorted	which
+dim_merge3_non.raref_16S	$	==	colSums	nrow	sum	tb16_min36155_tax_sorted	which
+count_samples_per_group_Heterotrophs_non.raref_16S	$	==	>	as.data.frame	colSums	data.table	length	rbind	tb16_min36155_tax_sorted	tb16_ss36155_tax_sorted	which
+aggregate_Heterotrophs_non.raref_16S	$	aggregate	attach	c	colnames<-	detach	length	list	order	row.names<-	rowSums	sum	tb16_min36155_tax_sorted	x
+create_table_merging_#OTUs_#reads_#samples_Heterotrophs_non.raref_16S	$	T	c	class_summary_otus_per_class_order	class_summary_reads_per_class_order	colnames<-	merge	occurrence_counts_phototrophs	order	row.names<-
+OTUs_vs_reads_relative_values_18S_Heterotrophs_non.raref_16S	$	$<-	colSums	tb16S_OTUs_reads_samples
+OTUs_vs_reads_18S_v2_Heterotrophs_non.raref_16S	OTUs_per_class	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	scale_x_log10	scale_y_log10	tb16S_OTUs_reads_samples	tb16S_OTUs_reads_samples_rel_abund	theme	unit
+reads_vs_samples_18S_Heterotrophs_non.raref_16S	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	samples_per_class	scale_x_continuous	scale_y_log10	tb16S_OTUs_reads_samples	tb16S_OTUs_reads_samples_rel_abund	theme	unit
+count_samples_per_group_non.raref_16S	$	==	>	as.data.frame	colSums	data.table	length	rbind	tb16_phototrophs	which
+aggregate_non.raref_16S	$	aggregate	attach	c	colnames<-	detach	length	list	order	row.names<-	rowSums	sum	tb16_phototrophs	x
+create_table_merging_#OTUs_#reads_#samples_non.raref_16S	$	T	c	class_summary_otus_per_class_order	class_summary_reads_per_class_order	colnames<-	merge	occurrence_counts_phototrophs	order	row.names<-
+OTUs_vs_reads_relative_values_18S_non.raref_16S	$	$<-	colSums	tb16S_OTUs_reads_samples
+OTUs_vs_reads_18S_v2_non.raref_16S	OTUs_per_class	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	scale_x_log10	scale_y_log10	tb16S_OTUs_reads_samples	tb16S_OTUs_reads_samples_rel_abund	theme	unit
+reads_vs_samples_18S_non.raref_16S	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	samples_per_class	scale_x_continuous	scale_y_log10	tb16S_OTUs_reads_samples	tb16S_OTUs_reads_samples_rel_abund	theme	unit
+cyanobacteria_histogram_non.raref_16S	$	==	T	aggregate	attach	c	colnames<-	detach	length	list	merge	order	row.names<-	rowSums	sum	tb16_phototrophs	which	x
+cyanos_abs_values_non.raref	cyano_OTUs_reads
+cyanos_rel_values_non.raref	$	$<-	[<-	c	colSums	cyano_OTUs_reads	read.table	rownames<-
+print_rel_values_non.raref	aes	c	cyano_OTUs_reads_rel_abund	cyano_OTUs_reads_rel_abund2	data	element_blank	element_text	geom_bar	ggplot	group	labs	rel	scale_fill_manual	scale_y_continuous	theme	value
