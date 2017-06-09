@@ -58,7 +58,7 @@ species_richness_rarefaction2_16S	dim	tb16_tax_occur_ss36155
 species_richness_rarefaction3_16S	rowSums	tb16_tax_occur_ss36155
 species_richness_rarefaction4_16S	==	colSums	length	tb16_tax_occur_ss36155	which
 species_richness_rarefaction5_16S	==	colSums	dim	mixedorder	row.names	tb16_tax_occur_ss36155	which
-dataset_summary_16S	dim	tb16_tax	tb16_tax_occur	tb16_tax_occur_ss36155_no_cero
+dataset_summary_16S	dim	tb16_tax	tb16_tax_occur	tb16_tax_occur_min36155	tb16_tax_occur_ss36155_no_cero
 merge_tables	$	$<-	T	[<-	as.character	as.numeric	dim	merge	order	rownames	rownames<-	sapply	strsplit	t	tb18_class	tb18_tax_occur_ss1154_no_cero
 select_phototrophs2	!=	$	&	dim	tb18_ss1154_tax_sorted	which
 select_phototrophs	!=	$	dim	tb18_ss1154_tax_sorted	which
@@ -90,7 +90,7 @@ richness_otu_no4_16S	OTUs_per_sample_16S_tax_occur_ss36155	boxplot	plot	sort
 pielou_index_of_evenness1_16S	OTUs_per_sample_16S_tax_occur_ss36155	log	tb16_tax_occur_ss36155_div
 pielou_index_of_evenness2_16S	boxplot	pielou_evenness_16S_tax_occur_ss36155	plot	sort
 OTUs_overall_abundance_16S	T	colSums	head	sort	tb16_tax_occur_ss36155_no_cero
-OTUs_overall_abundance2_16S	T	colSums	log	plot	sort	tb16_tax_occur_ss36155_no_cero
+OTUs_overall_abundance2_16S	:=	T	V1	aes	as.data.table	geom_point	ggplot	labs	nrow	order	rank	rowSums	scale_y_log10	t	tb16_tax_occur_ss36155_no_cero	theme_bw
 radfit_16S	colSums	plot	radfit	tb16_tax_occur_min36155_t
 preston_model1_16S	colSums	plot	prestonfit	tb16_tax_occur_min36155_t	veiledspec
 preston_model2_16S	colSums	lines	plot	prestondistr	tb16_tax_occur_min36155_t	tb16_tax_occur_ss36155_prestonfit	veiledspec
@@ -100,22 +100,22 @@ beta_div2_16S	hclust	plot	tb16_tax_occur_ss36155_no_cero.bray
 monoNMDS_16S	monoMDS	plot	tb16_tax_occur_ss36155_no_cero.bray
 metaNMDS_16S	metaMDS	plot	tb16_tax_occur_ss36155_no_cero.bray
 load_geo_data_16S	$	T	as.matrix	create.lats	data.table	dim	earth.dist	head	mixedorder	order	read.table	row.names	row.names<-
-working_datasets1_16S	dim	tb16_tax_occur_ss36155_no_cero
+working_datasets1_16S	as.matrix	dim	geo_distances_MP_16S	tb16_tax_occur_ss36155_no_cero	vegdist
 working_datasets2_16S	as.matrix	dim	tb16_tax_occur_ss36155_no_cero	vegdist
 working_datasets3_16S	dim	geo_distances_MP_16S
 working_datasets4_16S	geo_distances_MP_16S	plot	tb16_tax_occur_ss36155_no_cero.bray
 mantel_correlogram1_16S	geo_distances_MP_16S	mantel	tb16_tax_occur_ss36155_no_cero.bray
-mantel_correlogram2_16S	geo_distances_MP_16S	max
+mantel_correlogram2_16S	geo_distances_MP_16S	max	min
 mantel_correlogram3_16S	geo_distances_MP_16S	min
 mantel_correlogram4_16S	geo_distances_MP_16S	mantel.correlog	plot	seq	tb16_tax_occur_ss36155_no_cero.bray
 OTUs_mean_relative_abund_16S	as.data.frame	colSums	head	rowMeans	t	tb16_tax_occur_ss36155_no_cero
 OTUs_occurence_16S	>	[<-	as.data.frame	rowSums	str	tb16_tax_occur_ss36155_no_cero_t.rabund
 merge_rabund_peroccur_16S	c	colnames<-	merge	row.names<-	tb16_tax_occur_ss36155_no_cero_t.rabund_means	tb16_tax_occur_ss36155_no_cero_t.rabund_means.occurence_perc
 abund_vs_occurence_table_16S	$	abline	otu_tb16_ss36155_rabund_percoccur	plot
-abundant_OTUs_16S	$	>	T	c	cbind	dim	merge	order	otu_tb16_ss36155_rabund_percoccur	row.names	tb16_class
-abundant_OTUs2_16S	nrow	otu_tb16_ss36155_rabund_percoccur	tb16_ss36155_abundant_sorted
-select_cosmopolitan_16S	$	>	T	c	cbind	dim	merge	order	otu_tb16_ss36155_rabund_percoccur	row.names	tb16_class_prov
-percentage_cosmopolitan_16S	nrow	otu_tb16_ss36155_cosmop_sorted	otu_tb16_ss36155_rabund_percoccur
+abundant_OTUs_16S	$	>	T	c	cbind	merge	order	otu_tb16_ss36155_rabund_percoccur	row.names	tb16_class
+abundant_OTUs2_16S	nrow	otu_tb16_ss36155_rabund_percoccur	tb16_ss36155_abundant_sorted_prov
+select_cosmopolitan_16S	$	>	T	c	cbind	merge	order	otu_tb16_ss36155_rabund_percoccur	row.names	tb16_class_prov
+percentage_cosmopolitan_16S	nrow	otu_tb16_ss36155_cosmop_sorted_prov	otu_tb16_ss36155_rabund_percoccur
 rare_OTUs_16S	$	&	<	>	nrow	otu_tb16_ss36155_rabund_percoccur
 dim_merge	dim	tb18_ss1154_tax_sorted
 dim_merge.no.norm_18S	dim	tb18_min1154_tax_sorted
@@ -135,7 +135,7 @@ OTUs_vs_reads_relative_values_18S_heterotrophs	$	$<-	colSums	tb18S_OTUs_reads_sa
 OTUs_vs_reads_18S_v2_heterotrophs	OTUs_per_class	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	scale_x_log10	scale_y_log10	tb18S_OTUs_reads_samples	tb18S_OTUs_reads_samples_rel_abund	theme	unit
 reads_vs_samples_18S_heterotrophs	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	samples_per_class	scale_x_continuous	scale_y_log10	tb18S_OTUs_reads_samples	tb18S_OTUs_reads_samples_rel_abund	theme	unit
 dataset_summary_16S, 1:3	dim	tb16_tax	tb16_tax_occur	tb16_tax_occur_ss36155_no_cero
-merge_tables_16S	$	$<-	[<-	as.character	as.numeric	dim	merge	order	rownames	rownames<-	sapply	strsplit	t	tb16_class	tb16_tax_occur_ss36155_no_cero
+merge_tables_16S	$	$<-	T	[<-	as.character	as.numeric	dim	merge	order	rownames	rownames<-	sapply	strsplit	t	tb16_class	tb16_tax_occur_ss36155_no_cero
 select_phototrophs_16S	!=	$	&	==	dim	tb16_ss36155_tax_sorted	which	|
 aggregate_16S_protists	$	aggregate	attach	c	colnames<-	detach	length	list	order	row.names<-	rowSums	sum	tb16_protists	x
 aggregate_16S_bacteria	$	aggregate	attach	c	colnames<-	detach	length	list	order	row.names<-	rowSums	sum	tb16_bacteria	x
@@ -185,3 +185,14 @@ OTUs_vs_reads_18S_v2_non.raref	OTUs_per_class	aes	c	element_text	geom_point	geom
 reads_vs_samples_18S_non.raref	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	samples_per_class	scale_x_continuous	scale_y_log10	tb18S_OTUs_reads_samples	tb18S_OTUs_reads_samples_rel_abund	theme	unit
 summary_16S	colSums	summary	tb16_tax_occur
 samples_selection_16S	<	==	>=	MP0528	MP0778	TARA_100_SUR_0d2_3	TARA_141_SUR_0d2_3	TARA_93_SUR_0d2_3	TARA_94_SUR_0d2_3	amplicons_per_sample_tb16	c	colSums	dim	rowSums	sort	subset	tb16_tax_occur	which
+hclust_coloured_16S	$	F	c	hclust	merge	names	plot	read.table	row.names<-	tb16_tax_occur_ss36155_no_cero	vegdist	which
+hclust_coloured2_16S	::	[<-	as.dendrogram	c	cbind	color_branches	colored_bars	cutree	dev.off	factor	grepl	labels_colors<-	legend	length	order.dendrogram	par	paste0	plot	rep	rownames	tb16_tax_occur_ss36155_no_cero_dend	tb16_tax_occur_ss36155_no_cero_dend.upgma	unique
+dim_merge1_16S	colSums	nrow	sum	tb16_ss36155_tax_sorted
+dim_merge2_16S	!=	$	colSums	nrow	sum	tb16_ss36155_tax_sorted	which
+dim_merge3_16S	$	==	colSums	nrow	sum	tb16_ss36155_tax_sorted	which
+count_samples_per_group_Heterotrophs_16S	$	==	>	as.data.frame	colSums	data.table	length	rbind	tb16_ss36155_tax_sorted	which
+aggregate_Heterotrophs_16S	$	aggregate	attach	c	colnames<-	detach	length	list	order	row.names<-	rowSums	sum	tb16_ss36155_tax_sorted	x
+create_table_merging_#OTUs_#reads_#samples_Heterotrophs_16S	$	T	c	class_summary_otus_per_class_order	class_summary_reads_per_class_order	colnames<-	merge	occurrence_counts_phototrophs	order	row.names<-
+OTUs_vs_reads_relative_values_16S_Heterotrophs	$	$<-	colSums	tb16S_OTUs_reads_samples
+OTUs_vs_reads_16S_v2_Heterotrophs	OTUs_per_class	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	scale_x_log10	scale_y_log10	tb16S_OTUs_reads_samples	tb16S_OTUs_reads_samples_rel_abund	theme	unit
+reads_vs_samples_16S_Heterotrophs	aes	c	element_text	geom_point	geom_text_repel	ggplot	labs	reads_per_class	rownames	samples_per_class	scale_x_continuous	scale_y_log10	tb16S_OTUs_reads_samples	tb16S_OTUs_reads_samples_rel_abund	theme	unit
