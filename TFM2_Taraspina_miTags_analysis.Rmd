@@ -2041,11 +2041,11 @@ dim(tb16_tax_occur_ss36155_no_cero) #rarefied dataset
 tb16_tax_occur_ss36155_div <- diversity(tb16_tax_occur_ss36155_no_cero, index="shannon")
 ```
 
-Most of the samples take Shannon Index values around 6:
+Most of the samples take Shannon Index values between 7.0 and 7.4:
 
 ```{r shannon_index2_16S, echo=FALSE}
-boxplot(tb16_tax_occur_ss36155_div, pch=19, main="Shannon's index of diversity")
-plot(sort(tb16_tax_occur_ss36155_div), pch=19, main="Shannon's index of diversity")
+boxplot(tb16_tax_occur_ss36155_div, pch=19, main="TP 18S Shannon's index of diversity",ylab="Shannon's index")
+plot(sort(tb16_tax_occur_ss36155_div), pch=19, main="TP 18S Shannon's index of diversity", xlab="sample no.", ylab="Shannon's index")
 ```
 
 ### 2.3.2) Richness: OTU number
@@ -2085,9 +2085,18 @@ The Pielou index (constrained between 0 and 1) takes values closer to 1 as the v
 
 
 ```{r pielou_index_of_evenness2_16S, echo=F, results="hide"}
-plot(sort(pielou_evenness_16S_tax_occur_ss36155), pch=19)
-boxplot(pielou_evenness_16S_tax_occur_ss36155, pch=19)
+plot(sort(pielou_evenness_16S_tax_occur_ss36155), pch=19, main="TP 18S Pielou's index", xlab="sample no.", ylab="Pielou's index")
+boxplot(pielou_evenness_16S_tax_occur_ss36155, pch=19, main="TP 18S Pielou's index", ylab="Pielou's index")
 ```
+
+
+<!---
+#### 1.3.3.2) Sads
+library(sads)
+?sads
+--->
+
+### 2.3.4) Abundance Models
 
 
 ```{r OTUs_overall_abundance_16S, echo=F, results="hide"}
@@ -2116,13 +2125,8 @@ p1<-ggplot(tb16_tax_occur_ss36155_no_cero_rank, aes(x=rank,y=V1))+
 p1
 ```
 
-<!---
-#### 1.3.3.2) Sads
-library(sads)
-?sads
---->
 
-### 2.3.4) Abundance Models
+
 #### 2.3.4.1) Rank-Abundance or Dominance/Diversity Model ("radfit")
 
 The OTUs abundance distribution fits relativelly close to log-normal model. 
@@ -2138,7 +2142,7 @@ According to Preston's lognormal model fit into species frequencies groups, we'r
 
 ```{r preston_model1_16S, echo=F}
 tb16_tax_occur_ss36155_prestonfit<-prestonfit(colSums(tb16_tax_occur_min36155_t))
-plot(tb16_tax_occur_ss36155_prestonfit, main="TP 18S fit to Preston log-normal model \n(pooled species)")
+plot(tb16_tax_occur_ss36155_prestonfit, main="TP 16S fit to Preston log-normal model \n(pooled species)")
 
 veiledspec(tb16_tax_occur_ss36155_prestonfit)
 ```
@@ -2148,7 +2152,7 @@ When computing Prestons' lognormal model fit without pooling data into groups, w
 
 ```{r preston_model2_16S, echo=4}
 tb16_tax_occur_ss36155_dist_all<-prestondistr(colSums(tb16_tax_occur_min36155_t))
-plot(tb16_tax_occur_ss36155_prestonfit, main="TP 18S fit to Preston log-normal model \n(red: pooled; blue: non-pooled)")
+plot(tb16_tax_occur_ss36155_prestonfit, main="TP 16S fit to Preston log-normal model \n(red: pooled; blue: non-pooled)")
 lines(tb16_tax_occur_ss36155_dist_all, line.col="blue3")
 
 veiledspec(tb16_tax_occur_ss36155_dist_all)
@@ -2172,7 +2176,7 @@ tb16_rarecurve_allOTUs_step100_8642<-rarecurve(rarec_allOTUs_input, step = 1000,
 
 #### 2.3.6.1) Dissimilarity matrix using Bray-Curtis index:
 
-The Bray-Curtis dissimilarity, constrained between 0 (minimum distance) and 1 (highest dissimilarity) allows us to quantify the differences between samples according to the composition and relative abundance of their OTUs. In our dataset, most of the samples pairs take dissimilarity values around 0.5, meaning that their composition is substantially different.
+The Bray-Curtis dissimilarity, constrained between 0 (minimum distance) and 1 (highest dissimilarity) allows us to quantify the differences between samples according to the composition and relative abundance of their OTUs. In our dataset, most of the samples pairs take dissimilarity values around 0.5, meaning that, in some cases, samples composition could be similar.
 
 ```{r beta_div1_16S, echo=FALSE}
 #?vegdist
@@ -2482,6 +2486,10 @@ nrow(otu_tb16_ss36155_rabund_percoccur[otu_tb16_ss36155_rabund_percoccur$mean_ra
 
 ### 2.6.1) Normalized data
 
+\
+**PHOTOTROPHS + HETEROTROPHS**
+
+
 ```{r merge_tables_16S, echo=FALSE, results="hide", warning=FALSE}
 #Let's add the taxonomic classification by merging "tb16_tax_occur_ss36155_no_cero" with "tb16_tax":
 
@@ -2517,36 +2525,47 @@ sum(colSums(tb16_ss36155_tax_sorted[,1:43]))
 #tb16_ss36155_tax_sorted[1:5,1:5]
 ```
 
-No. of OTUs and reads of phototrophic groups:
+\
+Number and proportion (%) of OTUs of phototrophic groups:
 
 ```{r dim_merge2_16S, echo=F}
 #selection of phototrophs:
 tb16_phototrophs <- tb16_ss36155_tax_sorted[which(tb16_ss36155_tax_sorted$class_A != "other_bacteria"),]
 
 nrow(tb16_phototrophs)
-sum(colSums(tb16_phototrophs[,1:43]))
-
-#dim(tb16_phototrophs)
-#tb16_phototrophs[1:5,1:5]
+nrow(tb16_phototrophs)*100/nrow(tb16_ss36155_tax_sorted)
 ```
 
+Number and proportion (%) of reads of phototrophic groups:
 
-No. of OTUs and reads of non-phototrophic groups:
+```{r dim_merge2.2_16S, echo=F}
+sum(colSums(tb16_phototrophs[,1:43]))
+(sum(colSums(tb16_phototrophs[,1:43])))*100/sum(colSums(tb16_ss36155_tax_sorted[,1:43]))
+
+#dim(tb18_phototrophs)
+#tb18_phototrophs[1:5,1:5]
+```
+
+\
+Number and proportion (%) of OTUs of non-phototrophic groups:
 
 ```{r dim_merge3_16S, echo=F}
 #selection of non.phototrophs:
 tb16_non.phototrophs <- tb16_ss36155_tax_sorted[which(tb16_ss36155_tax_sorted$class_A == "other_bacteria"),]
 
 nrow(tb16_non.phototrophs)
-sum(colSums(tb16_non.phototrophs[,1:43]))
-
-#dim(tb16_non.phototrophs)
-#tb16_non.phototrophs[1:5,1:5]
+(nrow(tb16_non.phototrophs))*100/nrow(tb16_ss36155_tax_sorted)
 ```
 
-\
-**PHOTOTROPHS + HETEROTROPHS**
+Number and proportion (%) of reads of non-phototrophic groups:
 
+```{r dim_merge3.2_16S, echo=F}
+sum(colSums(tb16_non.phototrophs[,1:43]))
+(sum(colSums(tb16_non.phototrophs[,1:43])))*100/sum(colSums(tb16_ss36155_tax_sorted[,1:43]))
+```
+
+
+\
 **Absolute values**
 
 
@@ -3506,32 +3525,45 @@ sum(colSums(tb16_min36155_tax_sorted[,1:43]))
 #tb16_min36155_tax_sorted[1:5,1:5]
 ```
 
-No. of OTUs and reads of phototrophic groups:
+\
+Number and proportion (%) of OTUs of phototrophic groups:
 
 ```{r dim_merge2_non.raref_16S, echo=F}
 #selection of phototrophs:
-tb16_phototrophs <- tb16_min36155_tax_sorted[which(tb16_min36155_tax_sorted$class_A != "other_bacteria"),]
+tb16_phototrophs <- tb16_min36155_tax_sorted[which(tb16_min36155_tax_sorted$class_A != "other_bacteria"),,]
 
 nrow(tb16_phototrophs)
+nrow(tb16_phototrophs)*100/nrow(tb16_min36155_tax_sorted)
+```
+
+Number and proportion (%) of reads of phototrophic groups:
+
+```{r dim_merge2.2_non.raref_16S, echo=F}
 sum(colSums(tb16_phototrophs[,1:43]))
+(sum(colSums(tb16_phototrophs[,1:43])))*100/sum(colSums(tb16_min36155_tax_sorted[,1:43]))
 
 #dim(tb16_phototrophs)
 #tb16_phototrophs[1:5,1:5]
 ```
 
-
-No. of OTUs and reads of non-phototrophic groups:
+\
+Number and proportion (%) of OTUs of non-phototrophic groups:
 
 ```{r dim_merge3_non.raref_16S, echo=F}
 #selection of non.phototrophs:
 tb16_non.phototrophs <- tb16_min36155_tax_sorted[which(tb16_min36155_tax_sorted$class_A == "other_bacteria"),]
 
 nrow(tb16_non.phototrophs)
-sum(colSums(tb16_non.phototrophs[,1:43]))
-
-#dim(tb16_non.phototrophs)
-#tb16_non.phototrophs[1:5,1:5]
+(nrow(tb16_non.phototrophs))*100/nrow(tb16_min36155_tax_sorted)
 ```
+
+Number and proportion (%) of reads of non-phototrophic groups:
+
+```{r dim_merge3.2_non.raref_16S, echo=F}
+sum(colSums(tb16_non.phototrophs[,1:43]))
+(sum(colSums(tb16_non.phototrophs[,1:43])))*100/sum(colSums(tb16_min36155_tax_sorted[,1:43]))
+```
+
 
 
 \
@@ -4137,11 +4169,11 @@ cyano_OTUs_reads<-cyano_OTUs_reads[order(cyano_OTUs_reads$reads_per_class, cyano
 
 \
 Absolute values of cyanobacteria groups richness and abundance:
-```{r cyanos_abs_values_non.raref, echo=F}
+```{r cyanos_abs_values_non.raref_16S, echo=F}
 cyano_OTUs_reads
 ```
 
-```{r cyanos_rel_values_non.raref, echo=F, results="hide"}
+```{r cyanos_rel_values_non.raref_16S, echo=F, results="hide"}
 #compute relative values
 cyano_OTUs_reads_rel_abund <- cyano_OTUs_reads
 
@@ -4161,7 +4193,7 @@ cyano_OTUs_reads_rel_abund2<-read.table("input/cyano_histograms_data_non.raref.t
 
 Relative values of Cyanobacteria groups richness and abundance:
 
-```{r print_rel_values_non.raref, echo=F}
+```{r print_rel_values_non.raref_16S, echo=F}
 cyano_OTUs_reads_rel_abund[,1:2]
 
 ggplot(cyano_OTUs_reads_rel_abund2, aes(x=group, y=value, fill=data)) + 
@@ -4455,4 +4487,3 @@ ggplot(tb16S_OTUs_reads_samples_rel_abund) +
   geom_text_repel(aes(samples_per_class,reads_per_class, label = rownames(tb16S_OTUs_reads_samples)), size=4, force = 8, box.padding = unit(0.1, "lines"), point.padding = unit(0.2, 'lines')) + scale_x_continuous(limits = c(0, 116), breaks=c(25,50,75,100)) + labs(title="[2] Reads per class vs. samples in which they occur", x="\nTP-miTags-16S samples (%)", y="TP-miTags-16S reads (%)\n") + scale_y_log10(limits = c(-1,200), breaks = c(0,0.1,1,10,100)) + theme(axis.text=element_text(size=14), axis.title=element_text(size=16))
 ```
 \
-
