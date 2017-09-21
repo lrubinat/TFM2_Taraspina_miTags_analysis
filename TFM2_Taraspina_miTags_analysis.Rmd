@@ -138,7 +138,7 @@ plot(sort(colSums(tb18_tax_occur_min1154)), pch=19, xlab="sample no.", ylab="rea
 ## 1.2) Normalization
 
 \
-In order to keep as many samples as possible, we rarefy at **1154 reads per sample**. By that, we loose 10 samples, and after removing the exluded samples in the 16S dataset (to make them comparable), we end up with a **normalized dataset containing 43 samples and 5669 OTUs**.
+In order to keep as many samples as possible, we rarefy at **1154 reads per sample**. By that, we loose 10 samples, and after removing the exluded samples in the 16S dataset (to make them comparable), we end up with a **normalized dataset containing 43 samples and 5684 OTUs**.
 
 
 ``` {r species_richness_rarefaction1, echo=FALSE, results="hide"}
@@ -241,7 +241,7 @@ The Pielou index (constrained between 0 and 1) takes values closer to 1 as the v
 
 ```{r pielou_index_of_evenness2, echo=F}
 plot(sort(pielou_evenness_18S_tax_occur_ss1154), pch=19, main="TP 18S Pielou's index", xlab="sample no.", ylab="Pielou's index")
-boxplot(pielou_evenness_18S_tax_occur_ss1154, pch=19,  main="TP 18S Pielou's index", ylab="Pielou's index")
+boxplot(pielou_evenness_18S_tax_occur_ss1154, pch=19, main="TP 18S Pielou's index", ylab="Pielou's index")
 ```
 
 
@@ -1248,8 +1248,6 @@ ggplot(tb18S_OTUs_reads_samples_rel_abund) +
   geom_text_repel(aes(OTUs_per_class, reads_per_class, label = rownames(tb18S_OTUs_reads_samples)), size=4, force = 3, box.padding = unit(0.1, "lines"), point.padding = unit(0.02, 'lines')) + labs(title="[A3] METAG 18S: reads per class vs. OTUs per class",  x="\ndiversity (no. of OTUs in %)", y="abundance (no. of reads in %)\n") + scale_x_log10(limits = c(-1,200), breaks = c(0,0.1,1,10,100)) + scale_y_log10(limits = c(-1,200), breaks = c(0,0.1,1,10,100))  + theme(axis.text=element_text(size=14), axis.title=element_text(size=16))
 ```
 
-
-labs(title="[A1] Reads per class (abundance) vs. OTUs per class (diversity) in Malaspina & Tara Oceans Metagenomes", x="\nnumber of OTUs (%)", y="number of reads (%)\n")
 \
 \
 
@@ -1260,10 +1258,6 @@ ggplot(tb18S_OTUs_reads_samples_rel_abund) +
   geom_point(aes(samples_per_class,reads_per_class)) +
   geom_text_repel(aes(samples_per_class,reads_per_class, label = rownames(tb18S_OTUs_reads_samples)), size=4, force = 8, box.padding = unit(0.1, "lines"), point.padding = unit(0.2, 'lines')) + scale_x_continuous(limits = c(0, 116), breaks=c(25,50,75,100)) + labs(title="[A4] METAG 18S: reads per class vs. samples in which they occur", x="\nsamples in which they occurr (%)", y="abundance (no. of reads in %)\n") + scale_y_log10(limits = c(-1,200), breaks = c(0,0.1,1,10,100)) + theme(axis.text=element_text(size=14), axis.title=element_text(size=16))
 ```
-
-
-
-
 
 
 
