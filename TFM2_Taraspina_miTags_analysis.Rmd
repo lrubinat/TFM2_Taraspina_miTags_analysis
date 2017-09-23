@@ -72,7 +72,7 @@ dim(tb18_tax_occur) #8642   55
 tb18_tax_occur[1:5,1:5]
 ```
 
-The dataset "Taraspina 18S miTags" contains reads from **45 samples of Tara Oceans** and from **10 samples of Malaspina**. On average, each sample contains 4440 OTUs:
+The dataset "Taraspina 18S miTags" contains reads from **45 samples of Tara Oceans** and from **10 samples of Malaspina**. On average, each sample contains 4440 reads:
 
 ```{r summary, echo=FALSE, message=FALSE, warning=F}
 amplicons_per_sample_tb18<-colSums(tb18_tax_occur)
