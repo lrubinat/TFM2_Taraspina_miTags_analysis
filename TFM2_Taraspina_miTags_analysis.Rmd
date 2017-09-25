@@ -325,8 +325,7 @@ rarec_input<-t(as.matrix(colSums(tb18_tax_occur_ss1154_no_cero)))
 #tb18_rarecurve_step1000_10000<-rarecurve(rarec_input, step = 1000, 10000, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="18S amplicons diversity step=1000 & ss=10000\n(40,816 OTUs; 5,247,375 reads)\n")
 #tb18_rarecurve_step1000_10000
 
-tb18_rarecurve_step1000_ss1154<-rarecurve(rarec_input, step = 100, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="18S amplicons diversity, step=100 \n(5,719 OTUs; 49,622 reads)\n")
-
+tb18_rarecurve_step1000_ss1154<-rarecurve(rarec_input, step = 100, xlab = "Sample size", ylab = "OTUs", label = TRUE, main="18S amplicons diversity, step=100 \n(5,684 OTUs; 49,622 reads)\n")
 
 #without rarefying
 rarec_allOTUs_input<-t(as.matrix(colSums(t(tb18_tax_occur))))
@@ -1919,7 +1918,7 @@ dim(tb16_tax_occur) #28294    55
 tb16_tax_occur[1:5,1:5]
 ```
 
-The dataset "Taraspina 16S miTags" contains reads from **45 samples of Tara Oceans** and from **10 samples of Malaspina**. On average, each sample contains 77920 OTUs:
+The dataset "Taraspina 16S miTags" contains reads from **45 samples of Tara Oceans** and from **10 samples of Malaspina**. On average, each sample contains 77920 reads:
 
 ```{r summary_16S, echo=FALSE, message=FALSE, warning=F}
 amplicons_per_sample_tb16<-colSums(tb16_tax_occur)
@@ -1982,7 +1981,7 @@ plot(sort(colSums(tb16_tax_occur_min36155)), pch=19, xlab="sample", ylab="reads 
 ## 2.2) Normalization
 
 \
-In order to keep as many samples as possible, we rarefy at **36155 reads per sample**. By that, we loose 10 samples, and after removing the exluded samples in the 18S dataset (to make them comparable), we end up with a **normalized dataset containing 43 samples and 24691 OTUs**.
+In order to keep as many samples as possible, we rarefy at **36155 reads per sample**. By that, we loose 10 samples, and after removing the exluded samples in the 18S dataset (to make them comparable), we end up with a **normalized dataset containing 43 samples and 19726 OTUs**.
 
 
 ``` {r species_richness_rarefaction1_16S, echo=FALSE, results="hide"}
